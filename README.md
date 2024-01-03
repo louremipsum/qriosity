@@ -1,30 +1,20 @@
-# React + TypeScript + Vite
+![LogoLight](https://github.com/louremipsum/qriosity/assets/72456774/e74a3e75-cca4-4fbf-82e0-5487b427cb0d)
+# QRiosity
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A temporary QR service using AWS as a backend exclusively like AWS Lambda, Aurora, Cognito, S3 etc.
 
-Currently, two official plugins are available:
+## Steps to install
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```bash
+git clone https://github.com/louremipsum/qriosity.git
+cd qriosity
+npm i
+npm run dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Setting up Google Safe Browsing API
+
+Follow the steps in this link to get a Google API to enable link checking if it is malicious link or not.
+```
+https://kb.synology.com/en-uk/SRM/tutorial/How_to_generate_Google_Safe_Browsing_API_keys
+```
