@@ -9,13 +9,16 @@ import {
   Image,
   rem,
   ActionIcon,
+  Modal,
   Flex,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { isInRange, isNotEmpty, useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
 import { IconCalendar, IconCloudDownload } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useState } from "react";
+import axios from "axios";
 
 interface FormValues {
   name: string;
@@ -25,11 +28,24 @@ interface FormValues {
   link: string;
 }
 
-// import.meta.env.VITE_GOOGLE_API_KEY
+interface CheckURLResponse {
+  matches?: {
+    threatType: string;
+    platformType: string;
+    threat: {
+      url: string;
+    };
+    cacheDuration: string;
+    threatEntryType: string;
+  }[];
+}
 
 const QForm = () => {
   const dateIcon = <IconCalendar style={{ width: rem(16), height: rem(16) }} />;
   const [QR, setQR] = useState<string>("");
+  const [opened, { open, close }] = useDisclosure(false);
+  const [match, setMatch] = useState<CheckURLResponse>({});
+  const API_URL = "https://safebrowsing.googleapis.com/v4/threatMatches:find";
   const form = useForm<FormValues>({
     initialValues: {
       name: "",
@@ -40,13 +56,80 @@ const QForm = () => {
     },
 
     validate: {
-      name: isNotEmpty("Name is required"),
+      name: (value) =>
+        value.length < 1 ? "First name must have at least 1 letters" : null,
       ttl: isInRange({ min: 1 }, "At least 1 scan should be there"),
-      // validate if the link is safe to use using GoogleBrowserAPI
+      link: isNotEmpty("Link is required"),
     },
   });
+
+  const checkURL = async (url: string): Promise<CheckURLResponse> => {
+    try {
+      const response = await axios.post(
+        API_URL,
+        {
+          client: {
+            clientId: "Qriosity", // Replace with your client ID
+            clientVersion: "1.0.0", // Replace with your client version
+          },
+          threatInfo: {
+            threatTypes: ["MALWARE", "SOCIAL_ENGINEERING", "UNWANTED_SOFTWARE"],
+            platformTypes: ["ANY_PLATFORM"],
+            threatEntryTypes: ["URL"],
+            threatEntries: [{ url }],
+          },
+        },
+        {
+          params: { key: import.meta.env.VITE_GOOGLE_API_KEY },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Error checking URL:", error);
+      // Handle the error accordingly, e.g., log it or return false
+      return { matches: [] };
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (form.validate().hasErrors) return;
+    const response = await checkURL(form.values.link);
+    setMatch(response);
+    if (!response.matches) {
+      console.log(form.values);
+    } else {
+      // Display modal here
+      // You can use Mantine's Modal component for this
+      open();
+    }
+  };
+
   return (
     <>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title="Unsafe URL Detected"
+        centered
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3,
+        }}
+      >
+        <Image
+          src={"./warning.png"}
+          alt="warning"
+          h={100}
+          w="auto"
+          fit="contain"
+          m={"1rem auto"}
+        />
+        The link you have entered is unsafe according to Google Safe Browsing.
+        Please try again. The link has been reported as{" "}
+        <b>{match.matches![0].threatType} </b>.
+      </Modal>
       <Text
         size={"3rem"}
         fw={900}
@@ -62,7 +145,7 @@ const QForm = () => {
         QR Generation
       </Text>
       <SimpleGrid cols={2} spacing="sm" verticalSpacing="xs" mt={"xl"}>
-        <form onSubmit={form.onSubmit((values) => console.log(values))}>
+        <form onSubmit={handleSubmit}>
           <TextInput
             withAsterisk
             label="Name"
@@ -147,3 +230,7 @@ const QForm = () => {
 };
 
 export default QForm;
+
+//TODO: safe browsing api
+//TODO: when click submit then see if filled data is not same as previous data, check safe browsing api, get the s3 link
+// and set it to image tag, download it via HTML2Canvas library from frontend
