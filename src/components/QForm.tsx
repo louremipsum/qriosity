@@ -128,7 +128,7 @@ const QForm = () => {
         />
         The link you have entered is unsafe according to Google Safe Browsing.
         Please try again. The link has been reported as{" "}
-        <b>{match.matches![0].threatType} </b>.
+        <b>{match.matches && match.matches![0].threatType} </b>.
       </Modal>
       <Text
         size={"3rem"}
