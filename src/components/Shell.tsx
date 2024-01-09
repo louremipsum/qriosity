@@ -1,8 +1,9 @@
 import "../miscel.css";
-import { AppShell, Burger, Button, Group, Image } from "@mantine/core";
+import { AppShell, Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
 import QForm from "./QForm";
+import Header from "./Header";
 
 function Shell() {
   const [opened, { toggle }] = useDisclosure();
@@ -15,7 +16,7 @@ function Shell() {
 
   return (
     <AppShell
-      header={{ height: 60 }}
+      header={{ height: 80 }}
       navbar={{
         width: 250,
         breakpoint: "sm",
@@ -24,17 +25,7 @@ function Shell() {
       padding="md"
     >
       <AppShell.Header>
-        <Group h="100%" px="md">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <div>
-            <Image
-              src={"./LogoLight.png"}
-              alt="logo"
-              height={"49px"}
-              width={"150px"}
-            />
-          </div>
-        </Group>
+        <Header opened={opened} toggle={toggle} burger />
       </AppShell.Header>
 
       <AppShell.Navbar p="md">
