@@ -5,26 +5,29 @@ import {
   Group,
   SimpleGrid,
   NumberInput,
-  Stack,
   Image,
   rem,
-  ActionIcon,
   Modal,
-  Flex,
+  Checkbox,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { isInRange, isNotEmpty, useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
-import { IconCalendar, IconCloudDownload } from "@tabler/icons-react";
+import { IconCalendar } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useState } from "react";
 import axios from "axios";
+import backend from "../../backend";
+import { QRCode } from "qrcode";
+import QRCodeComponent from "./QRCodeGen";
 
 interface FormValues {
   name: string;
   desc: string;
   ttl: number;
+  infiniteScans: boolean;
   expiry: Date;
+  neverExpires: boolean;
   link: string;
 }
 
@@ -42,7 +45,7 @@ interface CheckURLResponse {
 
 const QForm = () => {
   const dateIcon = <IconCalendar style={{ width: rem(16), height: rem(16) }} />;
-  const [QR, setQR] = useState<string>("");
+  const [QR, setQR] = useState<QRCode | null>();
   const [opened, { open, close }] = useDisclosure(false);
   const [match, setMatch] = useState<CheckURLResponse>({});
   const API_URL = "https://safebrowsing.googleapis.com/v4/threatMatches:find";
@@ -51,7 +54,9 @@ const QForm = () => {
       name: "",
       desc: "",
       ttl: 1,
+      infiniteScans: false,
       expiry: new Date(),
+      neverExpires: false,
       link: "",
     },
 
@@ -98,7 +103,8 @@ const QForm = () => {
     const response = await checkURL(form.values.link);
     setMatch(response);
     if (!response.matches) {
-      console.log(form.values);
+      const res = backend(form.values);
+      setQR(res);
     } else {
       // Display modal here
       // You can use Mantine's Modal component for this
@@ -164,20 +170,35 @@ const QForm = () => {
             label="Valid Scans"
             mt={"lg"}
             min={1}
+            disabled={form.values.infiniteScans}
             placeholder="How many times can this QR be scanned?"
             {...form.getInputProps("ttl")}
           />
-
+          <Checkbox
+            label="Infinite Scans"
+            description="The QR can be scanned for any number of times"
+            mt={"lg"}
+            color="teal"
+            {...form.getInputProps("infiniteScans")}
+          />
           <DateInput
             withAsterisk
             label="Expiry Date"
             placeholder="When should the QR expire?"
             rightSection={dateIcon}
             mt={"lg"}
+            color="teal"
+            disabled={form.values.neverExpires}
             minDate={dayjs(new Date()).add(1, "day").toDate()}
             {...form.getInputProps("expiry")}
           />
-
+          <Checkbox
+            label="No Expiry?"
+            description="The QR will not have an expiry date"
+            mt={"lg"}
+            color="teal"
+            {...form.getInputProps("neverExpires")}
+          />
           <TextInput
             withAsterisk
             label="Link"
@@ -192,38 +213,13 @@ const QForm = () => {
             </Button>
           </Group>
         </form>
-
-        <Stack align="center">
-          <Flex
-            justify={"center"}
-            align={"center"}
-            mih={"200px"}
-            style={{
-              border: "1px dashed #00c7b0",
-              borderRadius: "12px",
-              width: "200px",
-            }}
-          >
-            <Image
-              src={QR}
-              fallbackSrc="./Q.png"
-              h={"150px"}
-              w={"150px"}
-              alt="QR Code"
-            />
-          </Flex>
-          <ActionIcon
-            variant="filled"
-            size="lg"
-            aria-label="Download"
-            color="teal"
-          >
-            <IconCloudDownload
-              style={{ width: "70%", height: "70%" }}
-              stroke={1.5}
-            />
-          </ActionIcon>
-        </Stack>
+        {QR && (
+          <QRCodeComponent
+            size={200}
+            qrcodeObject={QR}
+            name={form.values.name}
+          />
+        )}
       </SimpleGrid>
     </>
   );
