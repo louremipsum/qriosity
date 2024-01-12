@@ -1,6 +1,8 @@
 import { Avatar, Button, Group, Image, Menu, rem, Burger } from "@mantine/core";
 import { useAuth0 } from "@auth0/auth0-react";
-import { IconLogout, IconUserCircle } from "@tabler/icons-react";
+import { IconLogout, IconSettings } from "@tabler/icons-react";
+import classes from "../css/index.module.css";
+import { Link } from "react-router-dom";
 
 type Props = {
   opened: boolean;
@@ -17,7 +19,13 @@ const Header = ({ opened, toggle, burger }: Props) => {
       },
     });
   return (
-    <Group justify="space-between" align="center" h="100%" p={"md"}>
+    <Group
+      justify="space-between"
+      align="center"
+      h="100%"
+      p={"md"}
+      className={classes.header}
+    >
       {burger && (
         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
       )}
@@ -25,8 +33,9 @@ const Header = ({ opened, toggle, burger }: Props) => {
         <Image
           src={"/LogoLight.png"}
           alt="logo"
-          height={"49px"}
-          width={"150px"}
+          h={"49px"}
+          w={"150px"}
+          ml={"md"}
         />
       </div>
       {!isAuthenticated && (
@@ -34,6 +43,7 @@ const Header = ({ opened, toggle, burger }: Props) => {
           color="teal"
           variant="filled"
           onClick={() => loginWithRedirect()}
+          mr={"xl"}
         >
           Login
         </Button>
@@ -51,13 +61,15 @@ const Header = ({ opened, toggle, burger }: Props) => {
 
           <Menu.Dropdown>
             <Menu.Label>Application</Menu.Label>
-            <Menu.Item
-              leftSection={
-                <IconUserCircle style={{ width: rem(14), height: rem(14) }} />
-              }
-            >
-              Profile
-            </Menu.Item>
+            <Link to="/app/profile">
+              <Menu.Item
+                leftSection={
+                  <IconSettings style={{ width: rem(14), height: rem(14) }} />
+                }
+              >
+                Settings
+              </Menu.Item>
+            </Link>
             <Menu.Item
               leftSection={
                 <IconLogout style={{ width: rem(14), height: rem(14) }} />
