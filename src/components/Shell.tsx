@@ -2,15 +2,20 @@ import "../miscel.css";
 import { AppShell, Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
-import QForm from "./QForm";
 import Header from "./Header";
+import { Link } from "react-router-dom";
 
-function Shell() {
+type Props = {
+  children: React.ReactNode;
+};
+
+function Shell({ children }: Props) {
   const [opened, { toggle }] = useDisclosure();
   const navOptions = [
     {
       key: 1,
       name: "View QRs",
+      link: "/app/viewqr",
     },
   ];
 
@@ -29,26 +34,34 @@ function Shell() {
       </AppShell.Header>
 
       <AppShell.Navbar p="md">
-        <Button
-          variant="filled"
-          color="teal"
-          size="md"
-          className="btnGrad"
-          radius="xl"
-          rightSection={<IconPlus />}
-        >
-          Create QRs
-        </Button>
-        {navOptions.map((item) => (
-          <Button variant="subtle" mt={"sm"} color="teal" key={item.key}>
-            {item.name}
+        <Link to="/app/createqr">
+          <Button
+            variant="filled"
+            color="teal"
+            size="md"
+            className="btnGrad"
+            radius="xl"
+            rightSection={<IconPlus />}
+            style={{ width: "100%", textDecoration: "none" }}
+          >
+            Create QRs
           </Button>
+        </Link>
+        {navOptions.map((item) => (
+          <Link to={item.link} key={item.key}>
+            <Button
+              variant="subtle"
+              mt={"sm"}
+              color="teal"
+              style={{ width: "100%" }}
+            >
+              {item.name}
+            </Button>
+          </Link>
         ))}
       </AppShell.Navbar>
 
-      <AppShell.Main>
-        <QForm />
-      </AppShell.Main>
+      <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
   );
 }
