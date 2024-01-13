@@ -13,6 +13,7 @@ import PrivateRoute from "./routes/PrivateRoute.tsx";
 import ViewQR from "./routes/ViewQR.tsx";
 import CreateQR from "./routes/CreateQR.tsx";
 import Profile from "./routes/Profile.tsx";
+import ViewId from "./routes/ViewId.tsx";
 
 const theme = createTheme({
   colors: {
@@ -47,6 +48,11 @@ const router = createBrowserRouter([
       { path: "/app/profile", element: <Profile /> },
       // other protected routes go here
     ],
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/view/:id",
+    element: <ViewId />,
     errorElement: <ErrorPage />,
   },
 ]);
