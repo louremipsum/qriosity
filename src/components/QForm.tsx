@@ -20,6 +20,7 @@ import axios from "axios";
 import backend from "../../backend";
 import { QRCode } from "qrcode";
 import QRCodeComponent from "./QRCodeGen";
+import { useAuth0 } from "@auth0/auth0-react";
 
 interface FormValues {
   name: string;
@@ -29,6 +30,7 @@ interface FormValues {
   expiry: Date;
   neverExpires: boolean;
   link: string;
+  user: string;
 }
 
 interface CheckURLResponse {
@@ -49,6 +51,7 @@ const QForm = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [match, setMatch] = useState<CheckURLResponse>({});
   const API_URL = "https://safebrowsing.googleapis.com/v4/threatMatches:find";
+  const { user } = useAuth0();
   const form = useForm<FormValues>({
     initialValues: {
       name: "",
@@ -58,6 +61,7 @@ const QForm = () => {
       expiry: new Date(),
       neverExpires: false,
       link: "",
+      user: user?.sub || "",
     },
 
     validate: {
@@ -104,6 +108,7 @@ const QForm = () => {
     setMatch(response);
     if (!response.matches) {
       const res = backend(form.values);
+      console.log(form.values);
       setQR(res);
     } else {
       // Display modal here
