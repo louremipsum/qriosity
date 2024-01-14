@@ -51,7 +51,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/view/:id",
+    path: "/viewLink/:id",
     element: <ViewId />,
     errorElement: <ErrorPage />,
   },
