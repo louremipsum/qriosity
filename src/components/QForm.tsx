@@ -17,7 +17,6 @@ import { IconCalendar } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useState } from "react";
 import axios from "axios";
-import backend from "../../backend";
 import { QRCode } from "qrcode";
 import QRCodeComponent from "./QRCodeGen";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -107,9 +106,18 @@ const QForm = () => {
     const response = await checkURL(form.values.link);
     setMatch(response);
     if (!response.matches) {
-      const res = backend(form.values);
-      console.log(form.values);
-      setQR(res);
+      const res = await axios.post(
+        import.meta.env.VITE_BACKEND_CREATE_QR,
+        form.values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      // const res = backend(form.values);
+      // setQR(res);
+      setQR(res.data.qrObject);
     } else {
       // Display modal here
       // You can use Mantine's Modal component for this
@@ -220,7 +228,7 @@ const QForm = () => {
         </form>
         {QR && (
           <QRCodeComponent
-            size={200}
+            size={250}
             qrcodeObject={QR}
             name={form.values.name}
           />
@@ -231,7 +239,3 @@ const QForm = () => {
 };
 
 export default QForm;
-
-//TODO: safe browsing api
-//TODO: when click submit then see if filled data is not same as previous data, check safe browsing api, get the s3 link
-// and set it to image tag, download it via HTML2Canvas library from frontend
