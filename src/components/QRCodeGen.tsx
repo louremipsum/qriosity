@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { ActionIcon, Stack, Flex } from "@mantine/core";
 import { IconCloudDownload } from "@tabler/icons-react";
-import { QRCode } from "qrcode";
+import { BitMatrix, QRCode } from "qrcode";
 
 interface QRCodeComponentProps {
   qrcodeObject: QRCode | null;
@@ -9,13 +9,18 @@ interface QRCodeComponentProps {
   name: string;
 }
 
+const helper = (module: BitMatrix, i: number, j: number) => {
+  const size = module.size;
+  const data = Uint8Array.from(Object.values(module.data));
+  return data[i * size + j];
+};
+
 const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
   qrcodeObject,
   size,
   name,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
   useEffect(() => {
     const generateQR = () => {
       const canvas = canvasRef.current;
@@ -25,7 +30,8 @@ const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
       const modulesSize = qrcodeObject!.modules.size;
       for (let i = 0; i < modulesSize; i++) {
         for (let j = 0; j < modulesSize; j++) {
-          ctx.fillStyle = qrcodeObject!.modules.get(i, j) ? "#000" : "#fff";
+          // ctx.fillStyle = qrcodeObject!.modules.get(i, j) ? "#000" : "#fff";
+          ctx.fillStyle = helper(qrcodeObject!.modules, i, j) ? "#000" : "#fff";
           ctx.fillRect(
             (j * size) / modulesSize,
             (i * size) / modulesSize,
@@ -61,8 +67,8 @@ const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
           style={{
             border: "1px dashed #00c7b0",
             borderRadius: "12px",
-            width: "250px",
-            height: "250px",
+            width: "300px",
+            height: "300px",
           }}
         >
           <canvas ref={canvasRef} width={size} height={size} />
