@@ -1,4 +1,7 @@
 import { useRouteError } from "react-router-dom";
+import { Title, Text, Button, Container, Group, Image } from "@mantine/core";
+import classes from "../css/ViewLink.module.css";
+import { Link } from "react-router-dom";
 
 type RouteError = {
   statusText?: string;
@@ -19,13 +22,33 @@ export default function ErrorPage() {
     console.error(error);
 
     return (
-      <div id="error-page">
-        <h1>Oops!</h1>
-        <p>Sorry, an unexpected error has occurred.</p>
-        <p>
-          <i>{error.statusText || error.message}</i>
-        </p>
-      </div>
+      <>
+        <Group style={{ backgroundColor: "whitesmoke" }} pt={"xs"} pb={"xs"}>
+          <Image
+            src={"/LogoLight.png"}
+            alt="logo"
+            h={"49px"}
+            w={"150px"}
+            ml={"md"}
+          />
+        </Group>
+        <div className={classes.root}>
+          <Container>
+            <div className={classes.label}>404</div>
+            <Title className={classes.title}>{error.statusText}</Title>
+            <Text size="lg" ta="center" className={classes.description}>
+              Opps! You found something that doesn't exist.
+            </Text>
+            <Group justify="center">
+              <Link to="/">
+                <Button variant="white" color="teal" size="md">
+                  Go to Home
+                </Button>
+              </Link>
+            </Group>
+          </Container>
+        </div>
+      </>
     );
   }
 
