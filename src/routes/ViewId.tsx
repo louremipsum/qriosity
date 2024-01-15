@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios, { AxiosResponse } from "axios";
 import { validate as uuidValidate, version as uuidVersion } from "uuid";
-import { Loader } from "@mantine/core";
+import ViewLink from "../components/ViewLink";
 
 type ResponseData = {
+  status?: number;
   link?: string;
   message?: string;
 };
@@ -50,11 +51,11 @@ const checkUUID = (id: string) => {
 const handleResponse = async (id: string) => {
   const response = await fetchUrl(id!);
 
-  if (response.status !== 200) {
+  if (response.data.status !== 200) {
     let message = "An unexpected error has occurred";
-    if (response.status === 400) {
+    if (response.data.status === 400) {
       message = "We are sorry but the link has expired";
-    } else if (response.status === 500) {
+    } else if (response.data.status === 500) {
       message = "Error processing request";
     }
     throw new Error(message);
@@ -83,7 +84,9 @@ const handleData = (response: AxiosResponse<ResponseData>) => {
 const ViewId = () => {
   const { id } = useParams();
   const [url, setUrl] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<{ msg: string; status: number } | null>(
+    null
+  );
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -99,7 +102,7 @@ const ViewId = () => {
         const link = handleData(response);
         setUrl(link);
       } catch (err) {
-        setError((err as Error).message);
+        setError({ msg: (err as Error).message, status: 500 });
       } finally {
         setLoading(false);
       }
@@ -121,30 +124,30 @@ const ViewId = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div>
-        {" "}
-        <Loader /> <p>Loading...</p>
-      </div>
-    );
+  if (loading || !url) {
+    return <ViewLink title="Loading..." buttonText="Loading..." />;
   }
 
   if (error) {
-    return <div>{error}</div>;
-  }
-
-  if (!url) {
-    return <Loader />; // Render nothing while the request is being made
+    return (
+      <ViewLink
+        status={error.status.toString()}
+        title={error.msg}
+        description="Please contact the QR administator for more information!"
+        buttonText="Go to Home"
+      />
+    );
   }
 
   const domain = new URL(url).hostname;
 
   return (
-    <div>
-      <h1>You are being redirected to {domain}</h1>
-      <button onClick={handleRedirect}>Proceed</button>
-    </div>
+    <ViewLink
+      status="200"
+      title={`You are being redirected to ${domain}`}
+      buttonText="Proceed"
+      buttonAction={handleRedirect}
+    />
   );
 };
 
