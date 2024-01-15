@@ -11,6 +11,7 @@ import {
   Checkbox,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
 import { isInRange, isNotEmpty, useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
 import { IconCalendar } from "@tabler/icons-react";
@@ -50,6 +51,7 @@ const QForm = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [match, setMatch] = useState<CheckURLResponse>({});
   const API_URL = "https://safebrowsing.googleapis.com/v4/threatMatches:find";
+  const [loading, setLoading] = useState<boolean>(false);
   const { user } = useAuth0();
   const form = useForm<FormValues>({
     initialValues: {
@@ -106,18 +108,30 @@ const QForm = () => {
     const response = await checkURL(form.values.link);
     setMatch(response);
     if (!response.matches) {
-      const res = await axios.post(
-        import.meta.env.VITE_BACKEND_CREATE_QR,
-        form.values,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      // const res = backend(form.values);
-      // setQR(res);
-      setQR(res.data.qrObject);
+      try {
+        setLoading(true);
+        const res = await axios.post(
+          import.meta.env.VITE_BACKEND_CREATE_QR,
+          form.values,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        // const res = backend(form.values);
+        // setQR(res);
+        setQR(res.data.qrObject);
+      } catch (err) {
+        notifications.show({
+          color: "red",
+          title: "Error",
+          message:
+            "There was an error while generating the QR Code. Please try again later.",
+        });
+      } finally {
+        setLoading(false);
+      }
     } else {
       // Display modal here
       // You can use Mantine's Modal component for this
@@ -221,7 +235,7 @@ const QForm = () => {
           />
 
           <Group mt="xl">
-            <Button type="submit" color="teal">
+            <Button type="submit" color="teal" loading={loading}>
               Submit
             </Button>
           </Group>
