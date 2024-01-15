@@ -112,7 +112,7 @@ const ViewId = () => {
     };
 
     fetchData();
-  }, [id, url]);
+  }, [id]);
 
   /**
    * Handles the redirect to the link obtained from QR.
@@ -127,9 +127,21 @@ const ViewId = () => {
     }
   };
 
-  if (loading || !url) {
+  if (loading) {
     return <ViewLink description="Loading..." loading />;
-  } else if (error) {
+  }
+
+  if (!url) {
+    return (
+      <ViewLink
+        description="No URL found"
+        buttonText="Go to Home"
+        buttonAction={directHomePage}
+      />
+    );
+  }
+
+  if (error) {
     return (
       <ViewLink
         status={error.status.toString()}
