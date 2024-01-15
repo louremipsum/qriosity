@@ -5,7 +5,7 @@ import { validate as uuidValidate, version as uuidVersion } from "uuid";
 import ViewLink from "../components/ViewLink";
 
 type ResponseData = {
-  status?: number;
+  status?: string;
   link?: string;
   message?: string;
 };
@@ -51,11 +51,11 @@ const checkUUID = (id: string) => {
 const handleResponse = async (id: string) => {
   const response = await fetchUrl(id!);
 
-  if (response.data.status !== 200) {
+  if (response.data.status !== "200") {
     let message = "An unexpected error has occurred";
-    if (response.data.status === 400) {
+    if (response.data.status === "400") {
       message = "We are sorry but the link has expired";
-    } else if (response.data.status === 500) {
+    } else if (response.data.status === "500") {
       message = "Error processing request";
     }
     throw new Error(message);
@@ -74,7 +74,7 @@ const handleResponse = async (id: string) => {
  * @throws Error if the link is not found in the response data.
  */
 const handleData = (response: AxiosResponse<ResponseData>) => {
-  if (!response.data.link) {
+  if (response.data.status !== "404") {
     throw new Error("We are sorry but the link was not found");
   } else {
     return response.data.link;
@@ -103,7 +103,7 @@ const ViewId = () => {
         checkUUID(id!);
         const response = await handleResponse(id!);
         const link = handleData(response);
-        setUrl(link);
+        setUrl(link!);
       } catch (err) {
         setError({ msg: (err as Error).message, status: 500 });
       } finally {
