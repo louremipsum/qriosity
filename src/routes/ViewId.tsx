@@ -131,16 +131,6 @@ const ViewId = () => {
     return <ViewLink description="Loading..." loading />;
   }
 
-  if (!url) {
-    return (
-      <ViewLink
-        description="No URL found"
-        buttonText="Go to Home"
-        buttonAction={directHomePage}
-      />
-    );
-  }
-
   if (error) {
     return (
       <ViewLink
@@ -151,6 +141,10 @@ const ViewId = () => {
         buttonAction={directHomePage}
       />
     );
+  }
+
+  if (!url) {
+    return <ViewLink description="Loading..." loading />;
   }
 
   const domain = new URL(url).hostname;
