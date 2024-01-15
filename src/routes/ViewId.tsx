@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios, { AxiosResponse } from "axios";
 import { validate as uuidValidate, version as uuidVersion } from "uuid";
 import ViewLink from "../components/ViewLink";
@@ -88,6 +88,9 @@ const ViewId = () => {
     null
   );
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  const directHomePage = () => navigate("/");
 
   useEffect(() => {
     /**
@@ -125,7 +128,7 @@ const ViewId = () => {
   };
 
   if (loading || !url) {
-    return <ViewLink title="Loading..." buttonText="Loading..." />;
+    return <ViewLink description="Loading..." loading />;
   }
 
   if (error) {
@@ -135,6 +138,7 @@ const ViewId = () => {
         title={error.msg}
         description="Please contact the QR administator for more information!"
         buttonText="Go to Home"
+        buttonAction={directHomePage}
       />
     );
   }

@@ -1,12 +1,20 @@
-import { Title, Text, Button, Container, Group, Image } from "@mantine/core";
+import {
+  Title,
+  Text,
+  Button,
+  Container,
+  Group,
+  Image,
+  Loader,
+} from "@mantine/core";
 import classes from "../css/ViewLink.module.css";
-import { Link } from "react-router-dom";
 
 interface ViewLinkProps {
   status?: string;
-  title: string;
+  title?: string;
   description?: string;
-  buttonText: string;
+  buttonText?: string;
+  loading?: boolean;
   buttonAction?: () => void;
 }
 
@@ -27,6 +35,7 @@ const ViewLink: React.FC<ViewLinkProps> = ({
   title,
   description,
   buttonText,
+  loading,
   buttonAction,
 }) => {
   return (
@@ -43,14 +52,18 @@ const ViewLink: React.FC<ViewLinkProps> = ({
       <div className={classes.root}>
         <Container>
           {status && <div className={classes.label}>{status}</div>}
-          <Title className={classes.title}>{title}</Title>
+          {loading ? (
+            <Loader />
+          ) : (
+            <Title className={classes.title}>{title}</Title>
+          )}
           {description && (
             <Text size="lg" ta="center" className={classes.description}>
               {description}
             </Text>
           )}
-          <Group justify="center">
-            <Link to="/">
+          {!loading && (
+            <Group justify="center">
               <Button
                 variant="white"
                 color="teal"
@@ -59,8 +72,8 @@ const ViewLink: React.FC<ViewLinkProps> = ({
               >
                 {buttonText}
               </Button>
-            </Link>
-          </Group>
+            </Group>
+          )}
         </Container>
       </div>
     </>
