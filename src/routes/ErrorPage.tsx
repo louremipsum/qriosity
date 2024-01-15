@@ -1,5 +1,13 @@
 import { useRouteError } from "react-router-dom";
-import { Title, Text, Button, Container, Group, Image } from "@mantine/core";
+import {
+  Title,
+  Text,
+  Button,
+  Container,
+  Group,
+  Image,
+  Loader,
+} from "@mantine/core";
 import classes from "../css/ViewLink.module.css";
 import { Link } from "react-router-dom";
 
@@ -19,8 +27,6 @@ const isError = (arg: unknown): arg is RouteError => {
 export default function ErrorPage() {
   const error = useRouteError();
   if (isError(error)) {
-    console.error(error);
-
     return (
       <>
         <Group style={{ backgroundColor: "whitesmoke" }} pt={"xs"} pb={"xs"}>
