@@ -6,6 +6,7 @@ import {
   Group,
   Image,
   Loader,
+  Flex,
 } from "@mantine/core";
 import classes from "../css/ViewLink.module.css";
 
@@ -53,7 +54,9 @@ const ViewLink: React.FC<ViewLinkProps> = ({
         <Container>
           {status && <div className={classes.label}>{status}</div>}
           {loading ? (
-            <Loader />
+            <Flex justify="center">
+              <Loader size={50} color="white" type="bars" />
+            </Flex>
           ) : (
             <Title className={classes.title}>{title}</Title>
           )}
