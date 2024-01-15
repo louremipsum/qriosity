@@ -1,13 +1,5 @@
 import { useRouteError } from "react-router-dom";
-import {
-  Title,
-  Text,
-  Button,
-  Container,
-  Group,
-  Image,
-  Loader,
-} from "@mantine/core";
+import { Title, Text, Button, Container, Group, Image } from "@mantine/core";
 import classes from "../css/ViewLink.module.css";
 import { Link } from "react-router-dom";
 
