@@ -6,6 +6,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { MantineProvider, createTheme } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import { Auth0Provider } from "@auth0/auth0-react";
 import Index from "./routes/Index.tsx";
 import ErrorPage from "./routes/ErrorPage.tsx";
@@ -67,6 +68,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       }}
     >
       <MantineProvider theme={theme}>
+        <Notifications />
         <RouterProvider router={router} />
       </MantineProvider>
     </Auth0Provider>
