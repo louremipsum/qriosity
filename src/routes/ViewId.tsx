@@ -74,7 +74,7 @@ const handleResponse = async (id: string) => {
  * @throws Error if the link is not found in the response data.
  */
 const handleData = (response: AxiosResponse<ResponseData>) => {
-  if (response.data.status !== "404") {
+  if (response.data.status === "404") {
     throw new Error("We are sorry but the link was not found");
   } else {
     return response.data.link;
@@ -102,8 +102,11 @@ const ViewId = () => {
       try {
         checkUUID(id!);
         const response = await handleResponse(id!);
+        console.log("respons->", response);
         const link = handleData(response);
+        console.log("link->", link);
         setUrl(link!);
+        console.log("error->", error);
       } catch (err) {
         setError({ msg: (err as Error).message, status: 500 });
       } finally {
