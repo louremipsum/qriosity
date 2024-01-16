@@ -48,6 +48,7 @@ interface CheckURLResponse {
 const QForm = () => {
   const dateIcon = <IconCalendar style={{ width: rem(16), height: rem(16) }} />;
   const [QR, setQR] = useState<QRCode | null>();
+  const [linkToQR, setLinkToQR] = useState<string>("");
   const [opened, { open, close }] = useDisclosure(false);
   const [match, setMatch] = useState<CheckURLResponse>({});
   const API_URL = "https://safebrowsing.googleapis.com/v4/threatMatches:find";
@@ -117,9 +118,8 @@ const QForm = () => {
             },
           }
         );
-        // const res = backend(form.values);
-        // setQR(res);
         setQR(res.data.qrObject);
+        setLinkToQR(res.data.link);
       } catch (err) {
         notifications.show({
           color: "red",
@@ -131,8 +131,6 @@ const QForm = () => {
         setLoading(false);
       }
     } else {
-      // Display modal here
-      // You can use Mantine's Modal component for this
       open();
     }
   };
@@ -243,6 +241,7 @@ const QForm = () => {
             size={250}
             qrcodeObject={QR}
             name={form.values.name}
+            linkToQR={linkToQR}
           />
         )}
       </SimpleGrid>
