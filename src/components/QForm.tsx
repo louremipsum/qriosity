@@ -25,7 +25,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 interface FormValues {
   name: string;
   desc: string;
-  ttl: number;
+  scansLeft: number;
   infiniteScans: boolean;
   expiry: Date;
   neverExpires: boolean;
@@ -57,7 +57,7 @@ const QForm = () => {
     initialValues: {
       name: "",
       desc: "",
-      ttl: 1,
+      scansLeft: 1,
       infiniteScans: false,
       expiry: new Date(),
       neverExpires: false,
@@ -68,7 +68,7 @@ const QForm = () => {
     validate: {
       name: (value) =>
         value.length < 1 ? "First name must have at least 1 letters" : null,
-      ttl: isInRange({ min: 1 }, "At least 1 scan should be there"),
+      scansLeft: isInRange({ min: 1 }, "At least 1 scan should be there"),
       link: isNotEmpty("Link is required"),
     },
   });
@@ -199,7 +199,7 @@ const QForm = () => {
             min={1}
             disabled={form.values.infiniteScans}
             placeholder="How many times can this QR be scanned?"
-            {...form.getInputProps("ttl")}
+            {...form.getInputProps("scansLeft")}
           />
           <Checkbox
             label="Infinite Scans"
