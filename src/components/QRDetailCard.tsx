@@ -8,8 +8,13 @@ import {
   NumberInput,
   Checkbox,
   rem,
+  Modal,
+  Stack,
+  Image,
+  LoadingOverlay,
 } from "@mantine/core";
 import { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
 import {
   useForm,
   isInRange,
@@ -38,6 +43,38 @@ type QRDetail = {
   name: string;
   desc: string;
   infiniteScans: boolean;
+  linkToQR: string;
+};
+
+const deleteQR = async (
+  id: string,
+  refreshQRs: () => void,
+  toggle: () => void
+) => {
+  try {
+    toggle();
+    const response = await axios.delete(
+      `${import.meta.env.VITE_BACKEND_DELETE_QRS}/${id}`
+    );
+
+    if (response.data.statusCode !== 200) {
+      throw new Error("Failed to delete QR code");
+    }
+    notifications.show({
+      color: "teal",
+      title: "Success",
+      message: "QR Code deleted successfully!",
+    });
+    toggle();
+    refreshQRs();
+  } catch (error) {
+    // Handle the error
+    notifications.show({
+      color: "red",
+      title: "Error",
+      message: (error as Error).message,
+    });
+  }
 };
 
 const handleSubmit = async (
@@ -113,92 +150,131 @@ const QRForm = ({
   loading: boolean;
 }) => {
   const dateIcon = <IconCalendar style={{ width: rem(16), height: rem(16) }} />;
+  const [visible, { toggle }] = useDisclosure(false);
+  const [opened, { open, close }] = useDisclosure(false);
   return (
-    <form onSubmit={(e) => handleSubmit(e, form, setLoading, refreshQRs)}>
-      <SimpleGrid
-        cols={{ base: 1, sm: 2 }}
-        spacing="xl"
-        verticalSpacing="sm"
-        mt={"xl"}
-      >
-        <TextInput
-          withAsterisk
-          label="Name"
-          placeholder="Qriosity..."
-          {...form.getInputProps("name")}
-        />
-        <TextInput
-          label="Description"
-          placeholder="What is the QR for?"
-          {...form.getInputProps("desc")}
-        />
-        <NumberInput
-          withAsterisk
-          label="Valid Scans"
-          min={1}
-          placeholder="How many times can this QR be scanned?"
-          {...form.getInputProps("scansLeft")}
-        />
-        <Checkbox
-          label="Infinite Scans"
-          description="The QR can be scanned for any number of times"
+    <>
+      <Modal opened={opened} onClose={close} title="Confirm Delete" centered>
+        <Stack m={"md"}>
+          <Image src="/delete.svg" width={200} height={200} />
+          <Text fw={"500"} mt={"xl"} ta={"center"}>
+            Are you sure you want to delete this QR code?
+          </Text>
+          <Group justify="space-around">
+            <Button
+              onClick={() => {
+                deleteQR(form.values.id, refreshQRs, toggle);
+                close();
+              }}
+              variant="filled"
+              color="red"
+              style={{ width: "40%" }}
+            >
+              Delete
+            </Button>
+            <Button
+              onClick={() => close()}
+              color="teal"
+              variant="subtle"
+              style={{ width: "40%" }}
+            >
+              Cancel
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+      <LoadingOverlay
+        visible={visible}
+        zIndex={1000}
+        overlayProps={{ radius: "sm", blur: 2 }}
+      />
+      <form onSubmit={(e) => handleSubmit(e, form, setLoading, refreshQRs)}>
+        <SimpleGrid
+          cols={{ base: 1, sm: 2 }}
+          spacing="xl"
+          verticalSpacing="sm"
           mt={"xl"}
-          color="teal"
-          {...form.getInputProps("infiniteScans")}
-        />
-        <DateInput
-          withAsterisk
-          label="Expiry Date"
-          placeholder="When should the QR expire?"
-          rightSection={dateIcon}
-          color="teal"
-          disabled={form.values.neverExpires}
-          minDate={dayjs(new Date()).add(1, "day").toDate()}
-          {...form.getInputProps("expiry")}
-        />
-        <Checkbox
-          label="No Expiry?"
-          description="The QR will not have an expiry date"
-          mt={"xl"}
-          color="teal"
-          checked={form.values.neverExpires}
-          {...form.getInputProps("neverExpires")}
-        />
-        <TextInput
-          withAsterisk
-          label="Link"
-          placeholder="What link should be converted to QR Code?"
-          {...form.getInputProps("link")}
-        />
-      </SimpleGrid>
-      <Group justify="space-between">
-        <Button
-          radius="md"
-          color="teal"
-          mt="xl"
-          w={"40%"}
-          size="md"
-          variant="filled"
-          type="submit"
-          disabled={!form.isDirty()}
-          loading={loading}
-          leftSection={<IconDeviceFloppy />}
         >
-          Save
-        </Button>
-        <Button
-          radius="md"
-          mt="md"
-          color="red"
-          size="md"
-          w={"40%"}
-          variant="outline"
-          leftSection={<IconTrash />}
-        >
-          Delete
-        </Button>
-      </Group>
-    </form>
+          <TextInput
+            withAsterisk
+            label="Name"
+            placeholder="Qriosity..."
+            {...form.getInputProps("name")}
+          />
+          <TextInput
+            label="Description"
+            placeholder="What is the QR for?"
+            {...form.getInputProps("desc")}
+          />
+          <NumberInput
+            withAsterisk
+            label="Valid Scans"
+            min={1}
+            placeholder="How many times can this QR be scanned?"
+            {...form.getInputProps("scansLeft")}
+          />
+          <Checkbox
+            label="Infinite Scans"
+            description="The QR can be scanned for any number of times"
+            mt={"xl"}
+            color="teal"
+            {...form.getInputProps("infiniteScans")}
+          />
+          <DateInput
+            withAsterisk
+            label="Expiry Date"
+            placeholder="When should the QR expire?"
+            rightSection={dateIcon}
+            color="teal"
+            disabled={form.values.neverExpires}
+            minDate={dayjs(new Date()).add(1, "day").toDate()}
+            {...form.getInputProps("expiry")}
+          />
+          <Checkbox
+            label="No Expiry?"
+            description="The QR will not have an expiry date"
+            mt={"xl"}
+            color="teal"
+            checked={form.values.neverExpires}
+            {...form.getInputProps("neverExpires")}
+          />
+          <TextInput
+            withAsterisk
+            label="Link"
+            placeholder="What link should be converted to QR Code?"
+            {...form.getInputProps("link")}
+          />
+        </SimpleGrid>
+        <Group justify="space-between">
+          <Button
+            radius="md"
+            color="teal"
+            mt="xl"
+            w={"40%"}
+            size="md"
+            variant="filled"
+            type="submit"
+            disabled={!form.isDirty()}
+            loading={loading}
+            leftSection={<IconDeviceFloppy />}
+          >
+            Save
+          </Button>
+          <Button
+            radius="md"
+            mt="md"
+            color="red"
+            size="md"
+            w={"40%"}
+            variant="outline"
+            leftSection={<IconTrash />}
+            onClick={() => open()}
+          >
+            Delete
+          </Button>
+        </Group>
+      </form>
+    </>
   );
 };
 
@@ -216,6 +292,7 @@ const QRDetailCard = (props: QRDetail) => {
       neverExpires: props.neverExpires,
       link: props.link,
       user: props.user,
+      linkToQR: props.linkToQR,
     },
 
     validate: {
@@ -227,26 +304,29 @@ const QRDetailCard = (props: QRDetail) => {
   });
 
   return (
-    <Card withBorder padding="xl" radius="md">
-      <div>
-        {props.qrObject && (
-          <QRCodeComponent
-            size={150}
-            qrcodeObject={props.qrObject}
-            name={props.name}
-          />
-        )}
-      </div>
-      <Text ta="center" fz="lg" fw={500} mt="sm">
-        {props.name}
-      </Text>
-      <QRForm
-        form={form}
-        setLoading={setLoading}
-        loading={loading}
-        refreshQRs={refreshQRs}
-      />
-    </Card>
+    <>
+      <Card withBorder padding="xl" radius="md">
+        <div>
+          {props.qrObject && (
+            <QRCodeComponent
+              size={150}
+              qrcodeObject={props.qrObject}
+              name={props.name}
+              linkToQR={props.linkToQR}
+            />
+          )}
+        </div>
+        <Text ta="center" fz="lg" fw={500} mt="sm">
+          {props.name}
+        </Text>
+        <QRForm
+          form={form}
+          setLoading={setLoading}
+          loading={loading}
+          refreshQRs={refreshQRs}
+        />
+      </Card>
+    </>
   );
 };
 
