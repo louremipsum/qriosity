@@ -96,8 +96,6 @@ const QForm = () => {
 
       return response.data;
     } catch (error) {
-      console.error("Error checking URL:", error);
-      // Handle the error accordingly, e.g., log it or return false
       return { matches: [] };
     }
   };
