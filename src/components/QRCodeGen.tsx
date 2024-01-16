@@ -2,11 +2,13 @@ import React, { useEffect, useRef } from "react";
 import { ActionIcon, Stack, Flex } from "@mantine/core";
 import { IconCloudDownload } from "@tabler/icons-react";
 import { BitMatrix, QRCode } from "qrcode";
+import CopyItem from "./CopyItem";
 
 interface QRCodeComponentProps {
   qrcodeObject: QRCode | null;
   size: number;
   name: string;
+  linkToQR: string;
 }
 
 const helper = (module: BitMatrix, i: number, j: number) => {
@@ -19,6 +21,7 @@ const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
   qrcodeObject,
   size,
   name,
+  linkToQR,
 }) => {
   const fSize = size - 100;
   const sSize = size + 100;
@@ -76,6 +79,7 @@ const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
         >
           <canvas ref={canvasRef} width={size} height={size} />
         </Flex>
+        <CopyItem item={linkToQR} />
         <ActionIcon
           variant="filled"
           size="lg"
