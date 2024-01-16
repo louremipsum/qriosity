@@ -43,7 +43,7 @@ const Header = ({ opened, toggle, burger }: Props) => {
           color="teal"
           variant="filled"
           onClick={() => loginWithRedirect()}
-          mr={"xl"}
+          mr={"xxl"}
         >
           Login
         </Button>
@@ -67,7 +67,7 @@ const Header = ({ opened, toggle, burger }: Props) => {
                   <IconSettings style={{ width: rem(14), height: rem(14) }} />
                 }
               >
-                Settings
+                Profile
               </Menu.Item>
             </Link>
             <Menu.Item
