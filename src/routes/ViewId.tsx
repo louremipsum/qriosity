@@ -102,11 +102,8 @@ const ViewId = () => {
       try {
         checkUUID(id!);
         const response = await handleResponse(id!);
-        console.log("respons->", response);
         const link = handleData(response);
-        console.log("link->", link);
         setUrl(link!);
-        console.log("error->", error);
       } catch (err) {
         setError({ msg: (err as Error).message, status: 500 });
       } finally {
