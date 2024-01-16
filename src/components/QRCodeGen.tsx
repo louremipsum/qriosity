@@ -20,6 +20,8 @@ const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
   size,
   name,
 }) => {
+  const fSize = size - 100;
+  const sSize = size + 100;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const generateQR = () => {
@@ -63,12 +65,13 @@ const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
         <Flex
           justify={"center"}
           align={"center"}
-          mih={"200px"}
+          p={"sm"}
+          mih={`"${fSize}px"`}
           style={{
             border: "1px dashed #00c7b0",
             borderRadius: "12px",
-            width: "300px",
-            height: "300px",
+            width: `"${sSize}px"`,
+            height: `"${sSize}px"`,
           }}
         >
           <canvas ref={canvasRef} width={size} height={size} />
