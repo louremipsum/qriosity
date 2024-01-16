@@ -7,7 +7,7 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { MantineProvider, createTheme } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import { Auth0Provider } from "@auth0/auth0-react";
+import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import Index from "./routes/Index.tsx";
 import ErrorPage from "./routes/ErrorPage.tsx";
 import PrivateRoute from "./routes/PrivateRoute.tsx";
@@ -15,6 +15,7 @@ import ViewQR from "./routes/ViewQR.tsx";
 import CreateQR from "./routes/CreateQR.tsx";
 import Profile from "./routes/Profile.tsx";
 import ViewId from "./routes/ViewId.tsx";
+import Load from "./components/Load.tsx";
 
 const theme = createTheme({
   colors: {
@@ -58,19 +59,27 @@ const router = createBrowserRouter([
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <Auth0Provider
-      domain={import.meta.env.VITE_AUTH0_DOMAIN}
-      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
-      authorizationParams={{
-        redirect_uri: `${window.location.origin}/app/createqr`,
-      }}
-    >
+export const App = () => {
+  const { isLoading } = useAuth0();
+
+  return (
+    <React.StrictMode>
       <MantineProvider theme={theme}>
         <Notifications />
-        <RouterProvider router={router} />
+        {isLoading ? <Load /> : <RouterProvider router={router} />}
       </MantineProvider>
-    </Auth0Provider>
-  </React.StrictMode>
+    </React.StrictMode>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <Auth0Provider
+    domain={import.meta.env.VITE_AUTH0_DOMAIN}
+    clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
+    authorizationParams={{
+      redirect_uri: `${window.location.origin}/app/createqr`,
+    }}
+  >
+    <App />
+  </Auth0Provider>
 );
