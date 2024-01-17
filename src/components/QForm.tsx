@@ -10,10 +10,10 @@ import {
   Modal,
   Checkbox,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useScrollIntoView } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { isInRange, isNotEmpty, useForm } from "@mantine/form";
-import { DateInput } from "@mantine/dates";
+import { DateTimePicker } from "@mantine/dates";
 import { IconCalendar } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useState } from "react";
@@ -27,6 +27,7 @@ interface FormValues {
   desc: string;
   scansLeft: number;
   infiniteScans: boolean;
+  start: Date;
   expiry: Date;
   neverExpires: boolean;
   link: string;
@@ -54,12 +55,14 @@ const QForm = () => {
   const API_URL = "https://safebrowsing.googleapis.com/v4/threatMatches:find";
   const [loading, setLoading] = useState<boolean>(false);
   const { user } = useAuth0();
+  const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>();
   const form = useForm<FormValues>({
     initialValues: {
       name: "",
       desc: "",
       scansLeft: 1,
       infiniteScans: false,
+      start: new Date(),
       expiry: new Date(),
       neverExpires: false,
       link: "",
@@ -71,6 +74,10 @@ const QForm = () => {
         value.length < 1 ? "First name must have at least 1 letters" : null,
       scansLeft: isInRange({ min: 1 }, "At least 1 scan should be there"),
       link: isNotEmpty("Link is required"),
+      expiry: (value, values) =>
+        !values.neverExpires && dayjs(value).isBefore(dayjs(values.start))
+          ? "Expiry date and time cannot be before the start date and time"
+          : null,
     },
   });
 
@@ -120,6 +127,7 @@ const QForm = () => {
         );
         setQR(res.data.qrObject);
         setLinkToQR(res.data.link);
+        scrollIntoView();
       } catch (err) {
         notifications.show({
           color: "red",
@@ -209,15 +217,27 @@ const QForm = () => {
             color="teal"
             {...form.getInputProps("infiniteScans")}
           />
-          <DateInput
+          <DateTimePicker
+            withAsterisk
+            label="Start Date"
+            valueFormat="DD MMM YYYY hh:mm A"
+            placeholder="When should the QR start?"
+            rightSection={dateIcon}
+            mt={"lg"}
+            color="teal"
+            minDate={new Date()}
+            {...form.getInputProps("start")}
+          />
+          <DateTimePicker
             withAsterisk
             label="Expiry Date"
+            valueFormat="DD MMM YYYY hh:mm A"
             placeholder="When should the QR expire?"
             rightSection={dateIcon}
             mt={"lg"}
             color="teal"
             disabled={form.values.neverExpires}
-            minDate={dayjs(new Date()).add(1, "day").toDate()}
+            minDate={new Date()}
             {...form.getInputProps("expiry")}
           />
           <Checkbox
@@ -241,14 +261,16 @@ const QForm = () => {
             </Button>
           </Group>
         </form>
-        {QR && (
-          <QRCodeComponent
-            size={250}
-            qrcodeObject={QR}
-            name={form.values.name}
-            linkToQR={linkToQR}
-          />
-        )}
+        <div ref={targetRef}>
+          {QR && (
+            <QRCodeComponent
+              size={250}
+              qrcodeObject={QR}
+              name={form.values.name}
+              linkToQR={linkToQR}
+            />
+          )}
+        </div>
       </SimpleGrid>
     </>
   );
