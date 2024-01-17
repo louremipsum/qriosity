@@ -173,7 +173,12 @@ const QForm = () => {
       >
         QR Generation
       </Text>
-      <SimpleGrid cols={2} spacing="sm" verticalSpacing="xs" mt={"xl"}>
+      <SimpleGrid
+        cols={{ base: 1, sm: 2 }}
+        spacing="sm"
+        verticalSpacing="xs"
+        mt={"xl"}
+      >
         <form onSubmit={handleSubmit}>
           <TextInput
             withAsterisk

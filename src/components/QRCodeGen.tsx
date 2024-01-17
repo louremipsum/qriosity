@@ -64,7 +64,7 @@ const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
 
   return (
     <>
-      <Stack align="center">
+      <Stack align="center" mt={"lg"}>
         <Flex
           justify={"center"}
           align={"center"}
