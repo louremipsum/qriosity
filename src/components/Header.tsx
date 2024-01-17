@@ -30,13 +30,7 @@ const Header = ({ opened, toggle, burger }: Props) => {
         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
       )}
       <div>
-        <Image
-          src={"/LogoLight.png"}
-          alt="logo"
-          h={"49px"}
-          w={"150px"}
-          ml={"md"}
-        />
+        <Image src={"/LogoLight.png"} alt="logo" w={"150px"} ml={"md"} />
       </div>
       {!isAuthenticated && (
         <Button
