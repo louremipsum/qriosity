@@ -26,12 +26,14 @@ type resp = {
   neverExpires: { BOOL: boolean };
   user: { S: string };
   scansLeft: { N: number };
+  start: { S: string };
   expiry: { S: string };
   link: { S: string };
   id: { S: string };
   name: { S: string };
   desc: { S: string };
   infiniteScans: { BOOL: boolean };
+  linkToQr: { S: string };
 };
 
 type ResponseData = {
@@ -43,13 +45,14 @@ type QRList = {
   neverExpires: boolean;
   user: string;
   scansLeft: number;
+  start: Date;
   expiry: Date;
   link: string;
   id: string;
   name: string;
   desc: string;
   infiniteScans: boolean;
-  linkToQR: string;
+  linkToQr: string;
 };
 
 /**
@@ -73,13 +76,14 @@ const processResponseData = (
     neverExpires: item.neverExpires.BOOL,
     user: item.user.S,
     scansLeft: Number(item.scansLeft.N),
+    start: new Date(item.start.S),
     expiry: new Date(item.expiry.S),
     link: item.link.S,
     id: item.id.S,
     name: item.name.S,
     desc: item.desc.S,
     infiniteScans: item.infiniteScans.BOOL,
-    linkToQR: item.link.S,
+    linkToQr: item.linkToQr.S,
   }));
 };
 
@@ -151,7 +155,7 @@ const ViewQR = () => {
               <Flex justify={"center"} align={"center"} mih={"100vh"}>
                 <Loader size={50} color="teal" type="bars" />
               </Flex>
-            ) : data.length === 0 ? ( // Add this line
+            ) : data.length === 0 ? (
               <Stack align="center">
                 <Image
                   src={"/NotFound.svg"}
