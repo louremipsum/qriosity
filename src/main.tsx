@@ -14,8 +14,8 @@ import PrivateRoute from "./routes/PrivateRoute.tsx";
 import ViewQR from "./routes/ViewQR.tsx";
 import CreateQR from "./routes/CreateQR.tsx";
 import Profile from "./routes/Profile.tsx";
-import ViewId from "./routes/ViewId.tsx";
-import Load from "./components/Load.tsx";
+import ViewId from "./routes/AccessQR.tsx";
+import Load from "./utils/Load.tsx";
 
 const theme = createTheme({
   colors: {

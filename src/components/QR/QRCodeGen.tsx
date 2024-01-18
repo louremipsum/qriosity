@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { ActionIcon, Stack, Flex } from "@mantine/core";
 import { IconCloudDownload } from "@tabler/icons-react";
 import { BitMatrix, QRCode } from "qrcode";
-import CopyItem from "./CopyItem";
+import CopyItem from "../../utils/CopyItem";
 
 interface QRCodeComponentProps {
   qrcodeObject: QRCode | null;

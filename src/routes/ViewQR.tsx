@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import Shell from "../components/Shell";
+import Shell from "../components/common/Shell";
 import {
   ActionIcon,
   Card,
@@ -15,10 +15,10 @@ import {
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import axios, { AxiosResponse } from "axios";
 import { IconAdjustments } from "@tabler/icons-react";
-import QRDetailCard from "../components/QRDetailCard";
+import QRDetailCard from "../components/QR/QRDetailCard";
 import { QRCode } from "qrcode";
 import { useAuth0 } from "@auth0/auth0-react";
-import { QRContext } from "../components/QRContext";
+import { QRContext } from "../components/QR/QRContext";
 import { notifications } from "@mantine/notifications";
 
 type resp = {

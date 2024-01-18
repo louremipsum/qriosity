@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import Shell from "../components/Shell";
+import Shell from "../components/common/Shell";
 import { Avatar, Group, Text, Stack } from "@mantine/core";
 import { IconAt } from "@tabler/icons-react";
 

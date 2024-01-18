@@ -1,7 +1,7 @@
 import { Avatar, Button, Group, Image, Menu, rem, Burger } from "@mantine/core";
 import { useAuth0 } from "@auth0/auth0-react";
 import { IconLogout, IconSettings } from "@tabler/icons-react";
-import classes from "../css/index.module.css";
+import classes from "../../css/index.module.css";
 import { Link } from "react-router-dom";
 
 type Props = {

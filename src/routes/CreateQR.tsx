@@ -1,5 +1,5 @@
-import Shell from "../components/Shell";
-import QForm from "../components/QForm";
+import Shell from "../components/common/Shell";
+import QForm from "../components/QR/QForm";
 
 const CreateQR = () => {
   return (

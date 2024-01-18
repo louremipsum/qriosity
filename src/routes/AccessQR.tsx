@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios, { AxiosResponse } from "axios";
 import { validate as uuidValidate, version as uuidVersion } from "uuid";
-import ViewLink from "../components/ViewLink";
+import ViewLink from "../components/OpenQR/ViewLink";
 
 enum StatusCode {
   Ok = "200",

@@ -1,4 +1,4 @@
-import "../miscel.css";
+import classes from "../../css/miscel.module.css";
 import { AppShell, Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
@@ -39,7 +39,7 @@ function Shell({ children }: Props) {
             variant="filled"
             color="teal"
             size="md"
-            className="btnGrad"
+            className={classes.btnGrad}
             radius="xl"
             rightSection={<IconPlus />}
             style={{ width: "100%", textDecoration: "none" }}

@@ -7,7 +7,7 @@ import {
   BackgroundImage,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import Headers from "../components/Header";
+import Headers from "../components/common/Header";
 import classes from "../css/index.module.css";
 import { Link } from "react-router-dom";
 

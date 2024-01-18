@@ -29,7 +29,7 @@ import QRCodeComponent from "./QRCodeGen";
 import dayjs from "dayjs";
 import axios from "axios";
 import { notifications } from "@mantine/notifications";
-import { QRContext } from "../components/QRContext";
+import { QRContext } from "./QRContext";
 import { useContext } from "react";
 
 type QRDetail = {
@@ -223,6 +223,7 @@ const QRForm = ({
             description="The QR can be scanned for any number of times"
             mt={"xl"}
             color="teal"
+            checked={form.values.infiniteScans}
             {...form.getInputProps("infiniteScans")}
           />
           <DateTimePicker
@@ -326,7 +327,6 @@ const QRDetailCard = (props: QRDetail) => {
           : null,
     },
   });
-
   return (
     <>
       <Card withBorder padding="xl" radius="md">
