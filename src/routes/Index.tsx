@@ -8,13 +8,13 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Headers from "../components/common/Header";
-import classes from "../css/index.module.css";
 import { Link } from "react-router-dom";
 
 const Index = () => {
   const [opened, { toggle }] = useDisclosure();
+
   return (
-    <BackgroundImage src="/illlus/Grad_07.png" radius="xs">
+    <BackgroundImage src={"/illlus/Grad_07.png"} radius="xs">
       <Headers opened={opened} toggle={toggle} burger={false} />
       <div style={{ height: "100vh", overflowY: "hidden" }}>
         <Stack align="center" justify="center">
@@ -26,13 +26,11 @@ const Index = () => {
               fontSize: 60,
             }}
           >
-            Generate <span className="b"></span>
-            <span className={classes.temp}>Temporary</span> QR Codes!
+            Generate <span color="teal">Temporary</span> QR Codes!
           </Title>
           <Text
             size="sm"
             style={{ marginBottom: "2rem" }}
-            c={"black"}
             ta={"center"}
             fw={500}
           >
