@@ -3,6 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { IconLogout, IconSettings } from "@tabler/icons-react";
 import classes from "../../css/index.module.css";
 import { Link } from "react-router-dom";
+import ColorSchemeButton from "../../utils/ColorSchemeButton";
 
 type Props = {
   opened: boolean;
@@ -32,49 +33,52 @@ const Header = ({ opened, toggle, burger }: Props) => {
       <div>
         <Image src={"/LogoLight.png"} alt="logo" w={"150px"} ml={"md"} />
       </div>
-      {!isAuthenticated && (
-        <Button
-          color="teal"
-          variant="filled"
-          onClick={() => loginWithRedirect()}
-          mr={"xxl"}
-        >
-          Login
-        </Button>
-      )}
-      {isAuthenticated && (
-        <Menu shadow="md" width={200}>
-          <Menu.Target>
-            <Avatar
-              src={user!.picture}
-              alt={user!.name}
-              radius="xl"
-              size={40}
-            />
-          </Menu.Target>
+      <Group mr={"xl"}>
+        <ColorSchemeButton />
+        {!isAuthenticated && (
+          <Button
+            color="teal"
+            variant="filled"
+            onClick={() => loginWithRedirect()}
+            mr={"xxl"}
+          >
+            Login
+          </Button>
+        )}
+        {isAuthenticated && (
+          <Menu shadow="md" width={200}>
+            <Menu.Target>
+              <Avatar
+                src={user!.picture}
+                alt={user!.name}
+                radius="xl"
+                size={40}
+              />
+            </Menu.Target>
 
-          <Menu.Dropdown>
-            <Menu.Label>Application</Menu.Label>
-            <Link to="/app/profile">
+            <Menu.Dropdown>
+              <Menu.Label>Application</Menu.Label>
+              <Link to="/app/profile">
+                <Menu.Item
+                  leftSection={
+                    <IconSettings style={{ width: rem(14), height: rem(14) }} />
+                  }
+                >
+                  Profile
+                </Menu.Item>
+              </Link>
               <Menu.Item
                 leftSection={
-                  <IconSettings style={{ width: rem(14), height: rem(14) }} />
+                  <IconLogout style={{ width: rem(14), height: rem(14) }} />
                 }
+                onClick={() => logoutWithRedirect()}
               >
-                Profile
+                Logout
               </Menu.Item>
-            </Link>
-            <Menu.Item
-              leftSection={
-                <IconLogout style={{ width: rem(14), height: rem(14) }} />
-              }
-              onClick={() => logoutWithRedirect()}
-            >
-              Logout
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
-      )}
+            </Menu.Dropdown>
+          </Menu>
+        )}
+      </Group>
     </Group>
   );
 };
