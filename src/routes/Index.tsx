@@ -12,12 +12,13 @@ import { Link } from "react-router-dom";
 
 const Index = () => {
   const [opened, { toggle }] = useDisclosure();
+  // const computedColorScheme = useComputedColorScheme("light");
 
   return (
-    <BackgroundImage src={"/illlus/Grad_07.png"} radius="xs">
+    <BackgroundImage src={""} radius="xs">
       <Headers opened={opened} toggle={toggle} burger={false} />
-      <div style={{ height: "100vh", overflowY: "hidden" }}>
-        <Stack align="center" justify="center">
+      <div style={{ height: "100vh" }}>
+        <Stack align="center" justify="center" mt={"xl"}>
           <Title
             order={1}
             style={{
@@ -26,10 +27,20 @@ const Index = () => {
               fontSize: 60,
             }}
           >
-            Generate <span color="teal">Temporary</span> QR Codes!
+            Generate{" "}
+            <Text
+              variant="gradient"
+              fw={700}
+              size={"60px"}
+              gradient={{ from: "teal", to: "rgba(0, 229, 255, 1)", deg: 90 }}
+              style={{ display: "inline" }}
+            >
+              Temporary
+            </Text>{" "}
+            QR Codes!
           </Title>
           <Text
-            size="sm"
+            size="xl"
             style={{ marginBottom: "2rem" }}
             ta={"center"}
             fw={500}

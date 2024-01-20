@@ -1,4 +1,13 @@
-import { Avatar, Button, Group, Image, Menu, rem, Burger } from "@mantine/core";
+import {
+  Avatar,
+  Button,
+  Group,
+  Image,
+  Menu,
+  rem,
+  Burger,
+  useComputedColorScheme,
+} from "@mantine/core";
 import { useAuth0 } from "@auth0/auth0-react";
 import { IconLogout, IconSettings } from "@tabler/icons-react";
 import classes from "../../css/index.module.css";
@@ -13,6 +22,7 @@ type Props = {
 
 const Header = ({ opened, toggle, burger }: Props) => {
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const computedColorScheme = useComputedColorScheme("light");
   const logoutWithRedirect = () =>
     logout({
       logoutParams: {
@@ -31,7 +41,14 @@ const Header = ({ opened, toggle, burger }: Props) => {
         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
       )}
       <div>
-        <Image src={"/LogoLight.png"} alt="logo" w={"150px"} ml={"md"} />
+        <Image
+          src={
+            computedColorScheme === "light" ? "/LogoLight.png" : "/LogoDark.png"
+          }
+          alt="logo"
+          w={"150px"}
+          ml={"md"}
+        />
       </div>
       <Group mr={"xl"}>
         <ColorSchemeButton />
