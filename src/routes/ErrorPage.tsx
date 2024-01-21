@@ -35,7 +35,7 @@ export default function ErrorPage() {
             <div className={classes.label}>404</div>
             <Title className={classes.title}>{error.statusText}</Title>
             <Text size="lg" ta="center" className={classes.description}>
-              Opps! You found something that doesn't exist.
+              Oops! You found something that doesn't exist.
             </Text>
             <Group justify="center">
               <Link to="/">
