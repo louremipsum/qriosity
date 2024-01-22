@@ -8,11 +8,10 @@ import {
   Burger,
   useComputedColorScheme,
 } from "@mantine/core";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useUser } from "@auth0/nextjs-auth0/client";
 import { IconLogout, IconSettings } from "@tabler/icons-react";
-import classes from "../../css/index.module.css";
-import { Link } from "react-router-dom";
-import ColorSchemeButton from "../../utils/ColorSchemeButton";
+import classes from "@/styles/index.module.css";
+import ColorSchemeButton from "@/utils/ColorSchemeButton";
 
 type Props = {
   opened: boolean;
@@ -21,14 +20,9 @@ type Props = {
 };
 
 const Header = ({ opened, toggle, burger }: Props) => {
-  const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const { user, error, isLoading } = useUser();
   const computedColorScheme = useComputedColorScheme("light");
-  const logoutWithRedirect = () =>
-    logout({
-      logoutParams: {
-        returnTo: window.location.origin,
-      },
-    });
+
   return (
     <Group
       justify="space-between"
@@ -52,22 +46,20 @@ const Header = ({ opened, toggle, burger }: Props) => {
       </div>
       <Group mr={"xl"}>
         <ColorSchemeButton />
-        {!isAuthenticated && (
-          <Button
-            color="teal"
-            variant="filled"
-            onClick={() => loginWithRedirect()}
-            mr={"xxl"}
-          >
-            Login
-          </Button>
+        {/*TODO: redirect to dashboard after login */}
+        {!user && (
+          <a href="/api/auth/login">
+            <Button color="teal" variant="filled" mr={"xxl"}>
+              Login
+            </Button>
+          </a>
         )}
-        {isAuthenticated && (
+        {user && (
           <Menu shadow="md" width={200}>
             <Menu.Target>
               <Avatar
                 src={user!.picture}
-                alt={user!.name}
+                alt={user!.name || ""}
                 radius="xl"
                 size={40}
               />
@@ -75,23 +67,23 @@ const Header = ({ opened, toggle, burger }: Props) => {
 
             <Menu.Dropdown>
               <Menu.Label>Application</Menu.Label>
-              <Link to="/app/profile">
-                <Menu.Item
-                  leftSection={
-                    <IconSettings style={{ width: rem(14), height: rem(14) }} />
-                  }
-                >
-                  Profile
-                </Menu.Item>
-              </Link>
+
               <Menu.Item
                 leftSection={
-                  <IconLogout style={{ width: rem(14), height: rem(14) }} />
+                  <IconSettings style={{ width: rem(14), height: rem(14) }} />
                 }
-                onClick={() => logoutWithRedirect()}
               >
-                Logout
+                Profile
               </Menu.Item>
+              <a href="/api/auth/logout">
+                <Menu.Item
+                  leftSection={
+                    <IconLogout style={{ width: rem(14), height: rem(14) }} />
+                  }
+                >
+                  Logout
+                </Menu.Item>
+              </a>
             </Menu.Dropdown>
           </Menu>
         )}

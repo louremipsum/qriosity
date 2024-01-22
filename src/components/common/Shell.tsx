@@ -1,21 +1,23 @@
-import classes from "../../css/miscel.module.css";
+"use client";
+import classes from "@styles/miscel.module.css";
 import { AppShell, Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
-import Header from "./Header";
-import { Link } from "react-router-dom";
+import Header from "@/components/common/Header";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
+import Link from "next/link";
 
 type Props = {
   children: React.ReactNode;
 };
 
-function Shell({ children }: Props) {
+export default withPageAuthRequired(function Shell({ children }: Props) {
   const [opened, { toggle }] = useDisclosure();
   const navOptions = [
     {
       key: 1,
       name: "View QRs",
-      link: "/app/viewqr",
+      link: "/dashboard/viewqr",
     },
   ];
 
@@ -34,7 +36,7 @@ function Shell({ children }: Props) {
       </AppShell.Header>
 
       <AppShell.Navbar p="md">
-        <Link to="/app/createqr">
+        <Link href="/dashboard/createqr">
           <Button
             variant="filled"
             color="teal"
@@ -48,7 +50,7 @@ function Shell({ children }: Props) {
           </Button>
         </Link>
         {navOptions.map((item) => (
-          <Link to={item.link} key={item.key}>
+          <Link href={item.link} key={item.key}>
             <Button
               variant="subtle"
               mt={"sm"}
@@ -64,6 +66,4 @@ function Shell({ children }: Props) {
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
   );
-}
-
-export default Shell;
+});
