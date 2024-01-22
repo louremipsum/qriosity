@@ -8,8 +8,7 @@ const Page = async () => {
   const session = await getSession();
   const currentUser = JSON.stringify(session?.user.sub, null, 2);
   const resp = await fetch(
-    "https://s2zv0ze2gg.execute-api.ap-south-1.amazonaws.com/getqrs?" +
-      new URLSearchParams({ user_id: currentUser }),
+    `${process.env.VIEW_QRS}?` + new URLSearchParams({ user_id: currentUser }),
     { next: { revalidate: 3600 } }
   );
   const data = await resp.json();
