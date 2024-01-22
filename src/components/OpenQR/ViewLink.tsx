@@ -8,7 +8,7 @@ import {
   Loader,
   Flex,
 } from "@mantine/core";
-import classes from "../../css/ViewLink.module.css";
+import classes from "@styles/ViewLink.module.css";
 
 interface ViewLinkProps {
   status?: string;
