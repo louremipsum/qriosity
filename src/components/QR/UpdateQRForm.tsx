@@ -100,7 +100,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
   return (
     <Modal opened={opened} onClose={close} title="Confirm Delete" centered>
       <Stack m={"md"}>
-        <Image src="/delete.svg" width={200} height={200} />
+        <Image src="/delete.svg" width={200} height={200} alt="warning" />
         <Text fw={"500"} mt={"xl"} ta={"center"}>
           Are you sure you want to delete this QR code?
         </Text>
