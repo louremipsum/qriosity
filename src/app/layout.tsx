@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     siteName: "Qriosity",
     images: [
       {
-        url: "https://github.com/louremipsum/qriosity/blob/main/public/LogoLight.png?raw=true",
+        url: "https://github.com/louremipsum/qriosity/blob/main/public/Group_2.png?raw=true",
         width: 800,
         height: 600,
       },
@@ -44,6 +44,18 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Qriosity",
+    description: "Make temporary QR codes",
+    siteId: "1467726470533754880",
+    creator: "@louremipsum",
+    creatorId: "1467726470533754880",
+    images: [
+      "https://github.com/louremipsum/qriosity/blob/main/public/Group_2.png?raw=true",
+    ],
+  },
+  bookmarks: ["https://qriosityx.vercel.app/"],
 };
 
 export default function RootLayout({
