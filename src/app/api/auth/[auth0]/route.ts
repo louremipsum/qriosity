@@ -1,10 +1,4 @@
 // app/api/auth/[auth0]/route.js
 import { handleAuth, handleLogin } from "@auth0/nextjs-auth0";
 
-export default handleAuth({
-  async login(req: any, res: any) {
-    await handleLogin(req, res, {
-      returnTo: "/dashboard/createqr",
-    });
-  },
-});
+export const GET = handleAuth();
