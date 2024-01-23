@@ -12,6 +12,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { IconLogout, IconSettings } from "@tabler/icons-react";
 import classes from "@/styles/index.module.css";
 import ColorSchemeButton from "@/utils/ColorSchemeButton";
+import Link from "next/link";
 
 type Props = {
   opened: boolean;
@@ -34,16 +35,20 @@ const Header = ({ opened, toggle, burger }: Props) => {
       {burger && (
         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
       )}
-      <div>
-        <Image
-          src={
-            computedColorScheme === "light" ? "/LogoLight.png" : "/LogoDark.png"
-          }
-          alt="logo"
-          w={"150px"}
-          ml={"md"}
-        />
-      </div>
+      <Link href="/">
+        <div>
+          <Image
+            src={
+              computedColorScheme === "light"
+                ? "/LogoLight.png"
+                : "/LogoDark.png"
+            }
+            alt="logo"
+            w={"150px"}
+            ml={"md"}
+          />
+        </div>
+      </Link>
       <Group mr={"xl"}>
         <ColorSchemeButton />
         {/*TODO: redirect to dashboard after login */}

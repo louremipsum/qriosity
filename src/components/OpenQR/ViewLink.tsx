@@ -9,6 +9,7 @@ import {
   Flex,
 } from "@mantine/core";
 import classes from "@styles/ViewLink.module.css";
+import Link from "next/link";
 
 interface ViewLinkProps {
   status?: string;
@@ -42,13 +43,15 @@ const ViewLink: React.FC<ViewLinkProps> = ({
   return (
     <>
       <Group style={{ backgroundColor: "whitesmoke" }} p={"xs"}>
-        <Image
-          src={"/LogoLight.png"}
-          alt="logo"
-          h={"49px"}
-          w={"150px"}
-          ml={"md"}
-        />
+        <Link href="/">
+          <Image
+            src={"/LogoLight.png"}
+            alt="logo"
+            h={"49px"}
+            w={"150px"}
+            ml={"md"}
+          />
+        </Link>
       </Group>
       <div className={classes.root}>
         <Container>
