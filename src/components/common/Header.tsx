@@ -67,14 +67,15 @@ const Header = ({ opened, toggle, burger }: Props) => {
 
             <Menu.Dropdown>
               <Menu.Label>Application</Menu.Label>
-
-              <Menu.Item
-                leftSection={
-                  <IconSettings style={{ width: rem(14), height: rem(14) }} />
-                }
-              >
-                Profile
-              </Menu.Item>
+              <a href="/dashboard/profile">
+                <Menu.Item
+                  leftSection={
+                    <IconSettings style={{ width: rem(14), height: rem(14) }} />
+                  }
+                >
+                  Profile
+                </Menu.Item>
+              </a>
               <a href="/api/auth/logout">
                 <Menu.Item
                   leftSection={
