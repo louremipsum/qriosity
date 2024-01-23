@@ -3,15 +3,49 @@ import { getSession } from "@auth0/nextjs-auth0";
 import ViewQR from "@/components/QR/ViewQR";
 import type { QRList } from "@/types/viewqr";
 import type { resp } from "@/types/viewqr";
+import axios, { AxiosResponse } from "axios";
+
+const createAccessToken = async () => {
+  const options = {
+    method: "POST",
+    url: process.env.URL_AT,
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    data: new URLSearchParams({
+      client_id: process.env.AUTH0_CLIENT_ID!,
+      client_secret: process.env.AUTH0_CLIENT_SECRET!,
+      audience: process.env.AUTH0_AUDIENCE!,
+      grant_type: "client_credentials",
+    }),
+  };
+
+  try {
+    const response: AxiosResponse = await axios(options);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const Page = async () => {
   const session = await getSession();
   const currentUser = JSON.stringify(session?.user.sub, null, 2);
+  const token = await createAccessToken();
+
   const resp = await fetch(
     `${process.env.VIEW_QRS}?` + new URLSearchParams({ user_id: currentUser }),
-    { next: { revalidate: 3600 } }
+    {
+      headers: {
+        Authorization: `Bearer ${token.access_token}`,
+      },
+      next: { revalidate: 3600 },
+    }
   );
   const data = await resp.json();
+  if (!data) {
+    return {
+      notFound: true,
+    };
+  }
   const qrList: QRList[] = data.items.map((item: resp) => ({
     qrObject: JSON.parse(item.qrObject.S),
     neverExpires: item.neverExpires.BOOL,
