@@ -42,11 +42,17 @@ const ViewId = ({ params }: { params: { id: string } }) => {
 
   const handleRedirect = () => {
     if (url) {
-      const newWindow = window.open(url, "_blank");
-      if (newWindow) {
-        newWindow.focus();
+      try {
+        new URL(url);
+        const newWindow = window.open(url, "_blank");
+        if (newWindow) {
+          newWindow.focus();
+        }
+        window.close();
+      } catch (_) {
+        // Handle the case when the URL is not valid
+        // For example, you can display the URL text directly
       }
-      window.close();
     }
   };
 
@@ -70,7 +76,12 @@ const ViewId = ({ params }: { params: { id: string } }) => {
     return <ViewLink description="Loading..." loading />;
   }
 
-  const domain = new URL(url).hostname;
+  let domain;
+  try {
+    domain = new URL(url).hostname;
+  } catch (_) {
+    domain = url;
+  }
   return (
     <ViewLink
       status={StatusCode.Ok}
