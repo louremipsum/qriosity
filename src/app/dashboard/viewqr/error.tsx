@@ -11,7 +11,7 @@ export default function Error({
     <Stack align="center">
       <Image src={"/NotFound.svg"} h={"40%"} w={"40%"} alt="Not Found" />
       <Text size={"xl"} fw={500} ta={"center"} mt={"xl"}>
-        hmm... something went wrong
+        Hmm... something went wrong
       </Text>
       <Text size={"sm"} ta={"center"} c={"dimmed"}>
         There seems to be an error fetching your QRs{" "}
