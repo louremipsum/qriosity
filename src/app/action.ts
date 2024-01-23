@@ -7,6 +7,27 @@ import { QRDetail } from "@/types/viewqr";
 import { revalidatePath } from "next/cache";
 import { validate as uuidValidate, version as uuidVersion } from "uuid";
 
+const createAccessToken = async () => {
+  const options = {
+    method: "POST",
+    url: process.env.URL_AT,
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    data: new URLSearchParams({
+      client_id: process.env.AUTH0_CLIENT_ID!,
+      client_secret: process.env.AUTH0_CLIENT_SECRET!,
+      audience: process.env.AUTH0_AUDIENCE!,
+      grant_type: "client_credentials",
+    }),
+  };
+
+  try {
+    const response: AxiosResponse = await axios(options);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const checkURL = async (url: string): Promise<CheckURLResponse> => {
   try {
     const response = await axios.post(
@@ -46,61 +67,92 @@ const formAction = async (formValues: FormValues) => {
     };
     return respAction;
   }
-  const res = await axios.post(process.env.CREATE_QR!, formWithUser, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  if (res.data.statusCode !== 200) {
+  const token = await createAccessToken();
+  try {
+    const res = await axios.post(process.env.CREATE_QR!, formWithUser, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token.access_token}`,
+      },
+    });
+    if (res.data.statusCode !== 200) {
+      const respAction: ActionResponse = {
+        action: "QRCreationFailed",
+        message:
+          "There was an error while generating the QR Code. Please try again later",
+      };
+      return respAction;
+    }
+    const respAction: ActionResponse = {
+      action: "QRCodeCreated",
+      qrObject: res.data.qrObject,
+      link: res.data.link,
+      message: res.data.message,
+    };
+    return respAction;
+  } catch (error) {
     const respAction: ActionResponse = {
       action: "QRCreationFailed",
-      message:
-        "There was an error while generating the QR Code. Please try again later",
+      message: (error as Error).message,
     };
     return respAction;
   }
-  const respAction: ActionResponse = {
-    action: "QRCodeCreated",
-    qrObject: res.data.qrObject,
-    link: res.data.link,
-    message: res.data.message,
-  };
-  return respAction;
 };
 
 const formUpdateAction = async (dirtyFields: Partial<QRDetail>) => {
-  const res = await axios.patch(process.env.UPDATE_QRS!, dirtyFields, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  if (res.data.statusCode !== 200)
+  try {
+    const token = await createAccessToken();
+    const res = await axios.patch(process.env.UPDATE_QRS!, dirtyFields, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token.access_token}`,
+      },
+    });
+    if (res.data.statusCode !== 200)
+      return {
+        action: "QRUpdateFailed",
+        message:
+          "There was an error while updating the QR Code. Please try again later",
+      };
+    revalidatePath("/dashboard/viewqr");
+    return {
+      action: "QRCodeUpdated",
+      message: res.data.message,
+    };
+  } catch (error) {
     return {
       action: "QRUpdateFailed",
-      message:
-        "There was an error while updating the QR Code. Please try again later",
+      message: (error as Error).message,
     };
-  revalidatePath("/dashboard/viewqr");
-  return {
-    action: "QRCodeUpdated",
-    message: res.data.message,
-  };
+  }
 };
 
 const formDeleteAction = async (id: string) => {
-  const response = await axios.delete(`${process.env.DELETE_QRS}/${id}`);
-  if (response.data.statusCode !== 200) {
+  const token = await createAccessToken();
+  try {
+    const response = await axios.delete(`${process.env.DELETE_QRS}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token.access_token}`,
+      },
+    });
+    if (response.data.statusCode !== 200) {
+      return {
+        action: "QRDeletionFailed",
+        message:
+          "There was an error while deleting the QR Code. Please try again later",
+      };
+    }
+    revalidatePath("/dashboard/viewqr");
+    return {
+      action: "QRCodeDeleted",
+      message: response.data.message,
+    };
+  } catch (error) {
     return {
       action: "QRDeletionFailed",
-      message:
-        "There was an error while deleting the QR Code. Please try again later",
+      message: (error as Error).message,
     };
   }
-  revalidatePath("/dashboard/viewqr");
-  return {
-    action: "QRCodeDeleted",
-    message: response.data.message,
-  };
 };
 
 enum StatusCode {
