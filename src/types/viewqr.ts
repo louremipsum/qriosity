@@ -44,3 +44,9 @@ export type QRDetail = {
   infiniteScans: boolean;
   linkToQr: string;
 };
+
+type status = "Active" | "Scheduled" | "Expired";
+
+export interface extendedQRList extends QRList {
+  status: status;
+}

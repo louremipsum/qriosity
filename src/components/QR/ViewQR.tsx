@@ -11,14 +11,15 @@ import {
   Modal,
   ScrollArea,
   Image,
+  Badge,
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconAdjustments } from "@tabler/icons-react";
 import QRDetailCard from "@/components/QR/QRDetailCard";
-import type { QRList } from "@/types/viewqr";
+import type { QRList, extendedQRList } from "@/types/viewqr";
 
 type Props = {
-  qrList: QRList[];
+  qrList: extendedQRList[];
 };
 
 const ViewQR = ({ qrList }: Props) => {
@@ -104,6 +105,18 @@ const ViewQR = ({ qrList }: Props) => {
                     <IconAdjustments />
                   </ActionIcon>
                 </Group>
+                <Badge
+                  color={
+                    item.status === "Active"
+                      ? "teal"
+                      : item.status === "Scheduled"
+                      ? "blue"
+                      : "red"
+                  }
+                  variant="light"
+                >
+                  {item.status}
+                </Badge>
               </Card>
             ))
           )}
