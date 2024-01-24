@@ -21,7 +21,7 @@ type Props = {
 };
 
 const Header = ({ opened, toggle, burger }: Props) => {
-  const { user, error, isLoading } = useUser();
+  const { user } = useUser();
   const computedColorScheme = useComputedColorScheme("light");
 
   return (
