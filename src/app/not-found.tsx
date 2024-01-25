@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Button, Container, Group, Image, Text } from "@mantine/core";
+import { Button, Group, Image, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import classes from "@styles/ViewLink.module.css";
 
