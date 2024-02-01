@@ -7,15 +7,26 @@ import { QRDetail } from "@/types/viewqr";
 import { revalidatePath } from "next/cache";
 import { validate as uuidValidate, version as uuidVersion } from "uuid";
 
-const createAccessToken = async () => {
+/**
+ * Creates an access token using the provided manageAPI flag.
+ * @param manageAPI - A boolean flag indicating whether the access token is for Management API or not.
+ * @returns A Promise that resolves to the access token data.
+ */
+const createAccessToken = async (manageAPI: boolean) => {
   const options = {
     method: "POST",
     url: process.env.URL_AT,
     headers: { "content-type": "application/x-www-form-urlencoded" },
     data: new URLSearchParams({
-      client_id: process.env.AUTH0_CLIENT_ID!,
-      client_secret: process.env.AUTH0_CLIENT_SECRET!,
-      audience: process.env.AUTH0_AUDIENCE!,
+      client_id: manageAPI
+        ? process.env.AUTH0_ACCOUNT_MANAGE_CLIENT_ID!
+        : process.env.AUTH0_CLIENT_ID!,
+      client_secret: manageAPI
+        ? process.env.AUTH0_ACCOUNT_MANAGE_CLIENT_SECRET!
+        : process.env.AUTH0_CLIENT_SECRET!,
+      audience: manageAPI
+        ? process.env.AUTH0_AUD_MANAGE!
+        : process.env.AUTH0_AUDIENCE!,
       grant_type: "client_credentials",
     }),
   };
@@ -67,7 +78,7 @@ const formAction = async (formValues: FormValues) => {
     };
     return respAction;
   }
-  const token = await createAccessToken();
+  const token = await createAccessToken(false);
   try {
     const res = await axios.post(process.env.CREATE_QR!, formWithUser, {
       headers: {
@@ -101,7 +112,7 @@ const formAction = async (formValues: FormValues) => {
 
 const formUpdateAction = async (dirtyFields: Partial<QRDetail>) => {
   try {
-    const token = await createAccessToken();
+    const token = await createAccessToken(false);
     const res = await axios.patch(process.env.UPDATE_QRS!, dirtyFields, {
       headers: {
         "Content-Type": "application/json",
@@ -128,7 +139,7 @@ const formUpdateAction = async (dirtyFields: Partial<QRDetail>) => {
 };
 
 const formDeleteAction = async (id: string) => {
-  const token = await createAccessToken();
+  const token = await createAccessToken(false);
   try {
     const response = await axios.delete(`${process.env.DELETE_QRS}/${id}`, {
       headers: {
@@ -207,4 +218,41 @@ const accessQRAction = async (id: string) => {
   };
 };
 
-export { formAction, formUpdateAction, formDeleteAction, accessQRAction };
+const changeUserRole = async (userID: string, role: string) => {
+  const url = `${
+    process.env.AUTH0_ISSUER_BASE_URL
+  }/api/v2/users/${encodeURIComponent(userID)}/roles`;
+  const token = await createAccessToken(true);
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token.access_token}`,
+  };
+
+  const data = {
+    roles: [role],
+  };
+
+  try {
+    // Get the user's current roles
+    const currentRolesResponse = await axios.get(url, { headers });
+    const currentRoles = currentRolesResponse.data;
+
+    // Extract the role IDs from the current roles
+    const currentRoleIds = currentRoles.map((role: { id: string }) => role.id);
+
+    // Remove all current roles
+    await axios.delete(url, { headers, data: { roles: currentRoleIds } });
+    const response = await axios.post(url, data, { headers });
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export {
+  formAction,
+  formUpdateAction,
+  formDeleteAction,
+  accessQRAction,
+  changeUserRole,
+};
