@@ -1,3 +1,4 @@
+// TODO: fix the drawer in shell when logged in
 import {
   Avatar,
   Button,
@@ -7,7 +8,10 @@ import {
   rem,
   Burger,
   useComputedColorScheme,
+  Drawer,
+  Stack,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { IconLogout, IconSettings } from "@tabler/icons-react";
 import classes from "@/styles/index.module.css";
@@ -23,6 +27,7 @@ type Props = {
 const Header = ({ opened, toggle, burger }: Props) => {
   const { user } = useUser();
   const computedColorScheme = useComputedColorScheme("light");
+  const matches = useMediaQuery("(min-width: 36em)");
 
   return (
     <Group
@@ -32,29 +37,84 @@ const Header = ({ opened, toggle, burger }: Props) => {
       p={"md"}
       className={classes.header}
     >
-      {burger && (
-        <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-      )}
-      <Link href="/">
-        <div>
-          <Image
-            src={
-              computedColorScheme === "light"
-                ? "/LogoLight.png"
-                : "/LogoDark.png"
-            }
-            alt="logo"
-            w={"150px"}
-            ml={"md"}
+      <Group>
+        {burger && (
+          <Burger
+            opened={opened}
+            onClick={toggle}
+            hiddenFrom="sm"
+            size="sm"
+            aria-label="Toggle navigation"
           />
-        </div>
-      </Link>
-      <Group mr={"xl"}>
-        <ColorSchemeButton />
-        {/*TODO: redirect to dashboard after login */}
+        )}
+        <Link href="/">
+          <div>
+            <Image
+              src={
+                computedColorScheme === "light"
+                  ? "/LogoLight.png"
+                  : "/LogoDark.png"
+              }
+              alt="logo"
+              w={"150px"}
+            />
+          </div>
+        </Link>
+      </Group>
+      <Drawer
+        opened={opened}
+        onClose={toggle}
+        padding={"md"}
+        style={{ zIndex: 100 }}
+        title="Menu"
+      >
+        <Stack>
+          <Link href="/pricing">
+            <Button color="teal" variant="transparent">
+              Pricing
+            </Button>
+          </Link>
+          <Link href="/support">
+            <Button color="teal" variant="transparent">
+              Support
+            </Button>
+          </Link>
+          {user && (
+            <Link href="/dashboard/createqr">
+              <Button color="teal" variant="transparent">
+                Dashboard
+              </Button>
+            </Link>
+          )}
+          <ColorSchemeButton />
+        </Stack>
+      </Drawer>
+      {matches && (
+        <Group>
+          <Link href="/pricing">
+            <Button color="teal" variant="transparent">
+              Pricing
+            </Button>
+          </Link>
+          <Link href="/support">
+            <Button color="teal" variant="transparent">
+              Support
+            </Button>
+          </Link>
+          {user && (
+            <Link href="/dashboard/createqr">
+              <Button color="teal" variant="transparent">
+                Dashboard
+              </Button>
+            </Link>
+          )}
+        </Group>
+      )}
+      <Group>
+        {matches && <ColorSchemeButton />}
         {!user && (
-          <a href="/api/auth/login">
-            <Button color="teal" variant="filled" mr={"xxl"}>
+          <a href="/api/auth/login?returnTo=/dashboard/createqr">
+            <Button color="teal" variant="filled" radius={"md"}>
               Login
             </Button>
           </a>
