@@ -17,7 +17,7 @@ const Index = () => {
 
   return (
     <BackgroundImage src={""} radius="xs">
-      <Headers opened={opened} toggle={toggle} burger={false} />
+      <Headers opened={opened} toggle={toggle} burger />
       <div style={{ height: "100vh" }}>
         <Stack align="center" justify="center" mt={"xl"}>
           <Title
