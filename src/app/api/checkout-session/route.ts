@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
+import { getSession } from "@auth0/nextjs-auth0";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2023-10-16",
@@ -12,6 +13,12 @@ interface StripeError {
 
 export async function POST(request: Request) {
   try {
+    const sessionToCheck = await getSession();
+
+    // If the user is not authenticated, return a 401 Unauthorized response
+    if (!sessionToCheck) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const { userId, priceId, email, name } = await request.json();
     const { data: existingCustomers } = await stripe.customers.list({
       email: email,
@@ -84,6 +91,12 @@ export async function POST(request: Request) {
 
 export async function GET(request: NextRequest) {
   try {
+    const sessionToCheck = await getSession();
+
+    // If the user is not authenticated, return a 401 Unauthorized response
+    if (!sessionToCheck) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const sessionId = request.nextUrl.searchParams.get("session_id");
 
     const session = await stripe.checkout.sessions.retrieve(
