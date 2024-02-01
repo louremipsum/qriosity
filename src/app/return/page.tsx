@@ -15,7 +15,7 @@ import {
 } from "@mantine/core";
 import { IconCircleCheck } from "@tabler/icons-react";
 import Link from "next/link";
-import InvalidSessionPage from "./InvalidSessionPage";
+import InvalidSessionPage from "@/components/payment/InvalidSessionPage";
 
 export default function Return() {
   const [data, setData] = useState<{
