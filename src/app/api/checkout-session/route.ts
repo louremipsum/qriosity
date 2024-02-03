@@ -78,7 +78,8 @@ export async function POST(request: Request) {
       },
       custom_text: {
         terms_of_service_acceptance: {
-          message: "I agree to the [Terms of Service](/terms)",
+          message:
+            "I agree to the [Terms of Service](https://qrisoityx.vercel.app/terms-of-service) and [Privacy Policy](https://qrisoityx.vercel.app/privacy",
         },
       },
     });
