@@ -1,14 +1,21 @@
 "use client";
 import { Group, Button } from "@mantine/core";
 import { useFormStatus } from "react-dom";
-import { IconDeviceFloppy, IconTrash } from "@tabler/icons-react";
+import { IconDeviceFloppy } from "@tabler/icons-react";
+import { useAppSelector } from "@lib/hook";
 
 export function SubmitButton() {
   const { pending } = useFormStatus();
-
+  const qrCount = useAppSelector((state) => state.app.qrCount);
+  const userRole = useAppSelector((state) => state.app.userRole);
   return (
     <Group mt="xl">
-      <Button type="submit" color="teal" loading={pending}>
+      <Button
+        type="submit"
+        color="teal"
+        loading={pending}
+        disabled={qrCount >= 5}
+      >
         Submit
       </Button>
     </Group>
