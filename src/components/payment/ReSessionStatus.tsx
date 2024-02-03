@@ -3,6 +3,7 @@ import { useDisclosure } from "@mantine/hooks";
 import Link from "next/link";
 import { Button, Container, Mark, Stack, Text } from "@mantine/core";
 import { IconCircleCheck } from "@tabler/icons-react";
+import { FooterLinks } from "../common/Footer";
 
 type sessionData = {
   customer_email: string;
@@ -39,6 +40,7 @@ const ReSessionStatus = (props: sessionData) => {
           </Link>
         </Stack>
       </Container>
+      <FooterLinks />
     </>
   );
 };

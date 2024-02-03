@@ -25,6 +25,7 @@ import {
 } from "@tabler/icons-react";
 import { UserProfile, useUser } from "@auth0/nextjs-auth0/client";
 import { useRouter } from "next/navigation";
+import { FooterLinks } from "@/components/common/Footer";
 
 interface PricePlan {
   title: string;
@@ -153,7 +154,7 @@ const Pricing = () => {
     <>
       <BackgroundImage src="/bgPrice.svg">
         <Header opened={opened} toggle={toggle} burger />
-        <Stack m="xl" align="center">
+        <Stack align="center">
           <Container size="md">
             <Text fz={"2rem"} fw={700} m={0} ta={"center"}>
               Find the perfect plan to fit your QR code needs
@@ -180,6 +181,7 @@ const Pricing = () => {
                 padding="lg"
                 radius="md"
                 withBorder
+                mb={"lg"}
                 w={"20rem"}
               >
                 <Card.Section>
@@ -244,6 +246,7 @@ const Pricing = () => {
           </SimpleGrid>
         </Stack>
       </BackgroundImage>
+      <FooterLinks />
     </>
   );
 };

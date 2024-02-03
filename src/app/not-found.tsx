@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button, Group, Image, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import classes from "@styles/ViewLink.module.css";
+import { FooterLinks } from "@/components/common/Footer";
 
 export default function NotFound() {
   const matches = useMediaQuery("(min-width: 48em)");
@@ -43,6 +44,7 @@ export default function NotFound() {
           )}
         </Group>
       </div>
+      <FooterLinks />
     </>
   );
 }

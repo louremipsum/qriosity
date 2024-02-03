@@ -10,6 +10,7 @@ import {
 } from "@mantine/core";
 import classes from "@styles/ViewLink.module.css";
 import Link from "next/link";
+import { FooterLinks } from "../common/Footer";
 
 interface ViewLinkProps {
   status?: string;
@@ -82,6 +83,7 @@ const ViewLink: React.FC<ViewLinkProps> = ({
           )}
         </Container>
       </div>
+      <FooterLinks />
     </>
   );
 };

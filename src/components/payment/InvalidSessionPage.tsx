@@ -4,6 +4,7 @@ import { IconCircleX } from "@tabler/icons-react";
 import Link from "next/link";
 import Header from "@/components/common/Header";
 import { useDisclosure } from "@mantine/hooks";
+import { FooterLinks } from "../common/Footer";
 
 const InvalidSessionPage = () => {
   const [opened, { toggle }] = useDisclosure();
@@ -35,6 +36,7 @@ const InvalidSessionPage = () => {
           </Link>
         </Stack>
       </Container>
+      <FooterLinks />
     </>
   );
 };
