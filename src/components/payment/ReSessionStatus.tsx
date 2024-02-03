@@ -26,7 +26,7 @@ const ReSessionStatus = (props: sessionData) => {
             Thanks for Subscribing
           </Text>
           <Text ta="center" size="md" c={"dimmed"}>
-            A payment to Qriosityx Premium Plan will appear on your statement. A
+            A payment to Qriosity Premium Plan will appear on your statement. A
             confirmation email will be sent to{" "}
             <Mark color="teal">{props.customer_email}</Mark>
           </Text>

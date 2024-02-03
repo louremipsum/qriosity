@@ -67,6 +67,9 @@ export async function POST(request: Request) {
         },
       ],
       mode: "subscription",
+      allow_promotion_codes: true,
+
+      billing_address_collection: "auto",
       metadata: {
         userId,
       },
@@ -83,6 +86,7 @@ export async function POST(request: Request) {
         },
       },
     });
+
     return Response.json({ sessionId: session.id });
   } catch (err) {
     const { statusCode, message } = err as StripeError;
