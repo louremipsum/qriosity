@@ -249,10 +249,31 @@ const changeUserRole = async (userID: string, role: string) => {
   }
 };
 
+const viewQRAction = async (currentUser: string) => {
+  const token = await createAccessToken(false);
+  const resp = await fetch(
+    `${process.env.VIEW_QRS}?` + new URLSearchParams({ user_id: currentUser }),
+    {
+      headers: {
+        Authorization: `Bearer ${token.access_token}`,
+      },
+      next: { revalidate: 3600 },
+    }
+  );
+  const data = await resp.json();
+  if (!data) {
+    return {
+      notFound: true,
+    };
+  }
+  return data;
+};
+
 export {
   formAction,
   formUpdateAction,
   formDeleteAction,
   accessQRAction,
   changeUserRole,
+  viewQRAction,
 };
