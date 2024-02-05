@@ -15,7 +15,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Qriosity",
-  description: "Make temporary QR codes",
+  description: "Make Temporary QR codes",
   metadataBase: new URL("https://qriosityx.vercel.app/"),
   openGraph: {
     title: "Qriosity",
