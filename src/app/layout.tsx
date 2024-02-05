@@ -57,6 +57,9 @@ export const metadata: Metadata = {
     ],
   },
   bookmarks: ["https://qriosityx.vercel.app/"],
+  other: {
+    "google-site-verification": process.env.GSV!,
+  },
 };
 
 export default function RootLayout({
