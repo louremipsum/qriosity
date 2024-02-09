@@ -6,7 +6,7 @@ const data = [
   {
     title: "About",
     links: [
-      { label: "Features", link: "/" },
+      { label: "Features", link: "#features" },
       { label: "Pricing", link: "/pricing" },
       { label: "Support", link: "/support" },
     ],
