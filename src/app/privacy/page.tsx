@@ -128,7 +128,7 @@ const Privacy = () => {
         <Grid.Col span={{ base: 12, sm: 2, md: 2, lg: 2 }} mt={"md"}>
           <TOC />
         </Grid.Col>
-        <Grid.Col span={{ base: 12, sm: 1, md: 8, lg: 8 }} offset={0.5}>
+        <Grid.Col span={{ base: 12, sm: 8, md: 8, lg: 8 }} offset={0.5}>
           <Stack className={classes.content}>
             <Title id="Title" order={1} ta={"center"} fz={"3rem"} m={"lg"}>
               Privacy Policy
