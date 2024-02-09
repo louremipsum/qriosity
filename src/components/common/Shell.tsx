@@ -26,7 +26,7 @@ export default withPageAuthRequired(function Shell({ children }: Props) {
       header={{ height: 80 }}
       navbar={{
         width: 250,
-        breakpoint: "sm",
+        breakpoint: "md",
         collapsed: { mobile: !opened },
       }}
       padding="md"
