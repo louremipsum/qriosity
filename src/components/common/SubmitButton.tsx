@@ -1,7 +1,7 @@
 "use client";
 import { Group, Button } from "@mantine/core";
 import { useFormStatus } from "react-dom";
-import { IconDeviceFloppy } from "@tabler/icons-react";
+import { IconDeviceFloppy, IconSend } from "@tabler/icons-react";
 import { useAppSelector } from "@lib/hook";
 
 export function SubmitButton() {
@@ -42,6 +42,23 @@ export function SaveButton({ isDirty }: SaveButtonProps) {
       leftSection={<IconDeviceFloppy />}
     >
       Save
+    </Button>
+  );
+}
+
+export function ContactUsButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button
+      color="teal"
+      rightSection={<IconSend />}
+      radius={"md"}
+      mt={"xl"}
+      size="md"
+      loading={pending}
+      type="submit"
+    >
+      Send message
     </Button>
   );
 }
