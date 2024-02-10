@@ -1,6 +1,7 @@
 "use client";
 import { FooterLinks } from "@/components/common/Footer";
 import Header from "@/components/common/Header";
+import { ContactUs } from "@/components/support/ContactUs";
 import { useDisclosure } from "@mantine/hooks";
 
 const Support = () => {
@@ -8,6 +9,7 @@ const Support = () => {
   return (
     <>
       <Header opened={opened} toggle={toggle} burger />
+      <ContactUs />
       <FooterLinks />
     </>
   );
