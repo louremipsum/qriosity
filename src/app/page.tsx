@@ -95,7 +95,7 @@ const Feature = () => {
     </Paper>
   ));
   return (
-    <Container size="xl">
+    <Container size="xl" id="features">
       <SimpleGrid
         cols={{ base: 1, sm: 2, lg: 2 }}
         spacing={{ base: 10, sm: "xl" }}
@@ -127,13 +127,7 @@ function Video() {
 const Demo = () => {
   return (
     <Stack mb={80} mt={80}>
-      <Text
-        fw={700}
-        mt={80}
-        ta="center"
-        className={classes.featHeading}
-        id="features"
-      >
+      <Text fw={700} mt={80} ta="center" className={classes.featHeading}>
         How it all works out?
       </Text>
       <Image
@@ -143,6 +137,7 @@ const Demo = () => {
         height={200}
         className={classes.arrow}
       />
+      {/* TODO: fix the appearance of the text below (margin) for small screens */}
       <Group justify="space-around">
         <Stack w={"30%"}>
           <Text className={classes.demoTitle}>Create QR in 1-Click</Text>
