@@ -39,6 +39,11 @@ const createAccessToken = async (manageAPI: boolean) => {
   }
 };
 
+/**
+ * Checks the given URL against the Google Safe Browsing API for potential threats.
+ * @param url The URL to be checked.
+ * @returns A promise that resolves to a CheckURLResponse object containing information about potential threats.
+ */
 const checkURL = async (url: string): Promise<CheckURLResponse> => {
   try {
     const response = await axios.post(
@@ -218,6 +223,15 @@ const accessQRAction = async (id: string) => {
   };
 };
 
+/**
+ * Changes the role of a user in Auth0. The user's current roles are removed and the new role is added.
+ * Used for Stripe webhook events to update user roles based on their subscription status
+ * or events.
+ *
+ * @param {string} userID - The ID of the user.
+ * @param {string} role - The new role for the user.
+ * @returns {Promise<any>} - A promise that resolves to the response data or rejects with an error.
+ */
 const changeUserRole = async (userID: string, role: string) => {
   const url = `${
     process.env.AUTH0_ISSUER_BASE_URL
