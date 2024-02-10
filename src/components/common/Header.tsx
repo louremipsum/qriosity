@@ -64,7 +64,7 @@ const HeaderLinks = ({ user }: userProfileProps) => (
         Support
       </Button>
     </Link>
-    <Link href="#features">
+    <Link href="/#features">
       <Button color="teal" variant="transparent">
         Features
       </Button>
@@ -122,11 +122,11 @@ const UserMenu = ({ user }: userProfileProps) => (
 const Header = ({ opened, toggle, burger }: Props) => {
   const { user } = useUser();
   const computedColorScheme = useComputedColorScheme("light");
-  const matches = useMediaQuery("(min-width: 48em)");
+  const matches = useMediaQuery("(max-width: 48em)");
   const router = usePathname();
-
+  const showHeaderLinks =
+    matches && !router.startsWith("/dashboard") ? false : true;
   const showDrawer = !router.startsWith("/dashboard");
-
   return (
     <Group
       justify="space-between"
@@ -161,11 +161,11 @@ const Header = ({ opened, toggle, burger }: Props) => {
           </Stack>
         </Drawer>
       )}
-      {/* {matches && (
+      {showHeaderLinks && (
         <Group>
           <HeaderLinks user={user} />
         </Group>
-      )} */}
+      )}
       <Group>
         {matches && <ColorSchemeButton />}
         {!user && (
