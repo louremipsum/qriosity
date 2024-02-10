@@ -25,6 +25,7 @@
       "@utils/*": ["./src/utils/*"],
       "@types/*":["./src/types/*"],
       "@lib/*":["./src/lib/*"],
+      "@email/*":["./src/components/email/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
