@@ -115,9 +115,13 @@ const dynamicLink = (
 ) => {
   return async () => {
     if (item.title === "Hobby") {
-      router.push(
-        `/api/auth/login?returnTo=${encodeURIComponent("/dashboard/createqr")}`
-      );
+      if (user) router.push("/dashboard/createqr");
+      else
+        router.push(
+          `/api/auth/login?returnTo=${encodeURIComponent(
+            "/dashboard/createqr"
+          )}`
+        );
       return;
     }
     if (item.title === "Business") {
