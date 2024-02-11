@@ -1,6 +1,14 @@
 "use client";
 import Shell from "@/components/common/Shell";
-import { Avatar, Group, Text, Stack, Button, Badge } from "@mantine/core";
+import {
+  Avatar,
+  Group,
+  Text,
+  Stack,
+  Button,
+  Badge,
+  Divider,
+} from "@mantine/core";
 import { IconAt } from "@tabler/icons-react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
@@ -44,6 +52,13 @@ const Profile = () => {
           </Group>
         </div>
       </Stack>
+      <Divider my="md" mt={"xl"} mb={"xl"} />
+      <Text fz="xl" fw={500} mt={"lg"}>
+        Billing
+      </Text>
+      <Text fz="sm" fw={400} c="dimmed">
+        Manage your subscription and billing information
+      </Text>
       <Group mt={"xl"} gap={10}>
         <Text>Current Plan</Text>
 
@@ -51,15 +66,9 @@ const Profile = () => {
           {(user?.rolesArray as string[]) && (user?.rolesArray as string[])}
         </Badge>
       </Group>
-      <Text fz="lg" fw={500} mt={"lg"}>
-        Customer Portal
-      </Text>
-      <Text fz="sm" fw={400} c="dimmed">
-        Manage your subscription and billing information
-      </Text>
       <Link href={process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_TEST!}>
         <Button color="teal" variant="filled" mt={"lg"}>
-          Proceed
+          Manage subscription
         </Button>
       </Link>
     </Shell>
