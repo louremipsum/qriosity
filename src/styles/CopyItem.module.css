@@ -1,0 +1,23 @@
+.copyDiv {
+  border: 1px dashed teal;
+  border-radius: 8px;
+  padding: 0.5rem;
+  display: flex;
+  text-wrap: pretty;
+  width: 60%;
+  @media (max-width: $mantine-breakpoint-lg) {
+    width: 70%;
+  }
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
+  @media (max-width: $mantine-breakpoint-md) {
+    width: 100%;
+  }
+  @media (max-width: $mantine-breakpoint-sm) {
+    width: 100%;
+  }
+  @media (max-width: $mantine-breakpoint-xs) {
+    width: 100%;
+  }
+}

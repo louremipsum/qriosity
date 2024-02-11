@@ -1,5 +1,6 @@
-import { CopyButton, ActionIcon, Tooltip, rem, TextInput } from "@mantine/core";
+import { CopyButton, ActionIcon, Tooltip, rem, Text } from "@mantine/core";
 import { IconCopy, IconCheck } from "@tabler/icons-react";
+import classes from "@/styles/CopyItem.module.css";
 
 interface CopyItemProps {
   item: string;
@@ -12,7 +13,7 @@ const Btn = ({ item }: CopyItemProps) => {
         <Tooltip label={copied ? "Copied" : "Copy"} withArrow position="right">
           <ActionIcon
             color={copied ? "teal" : "gray"}
-            variant="subtle"
+            variant="outline"
             onClick={copy}
           >
             {copied ? (
@@ -29,11 +30,12 @@ const Btn = ({ item }: CopyItemProps) => {
 
 const CopyItem = (props: CopyItemProps) => {
   return (
-    <TextInput
-      disabled
-      value={props.item}
-      leftSection={<Btn item={props.item} />}
-    />
+    <div className={classes.copyDiv}>
+      <Text c={"gray"} mr={"xs"}>
+        {props.item.slice(8)}
+      </Text>
+      <Btn item={props.item} />
+    </div>
   );
 };
 
