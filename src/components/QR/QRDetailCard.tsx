@@ -10,7 +10,7 @@ interface QRDetailCardProps extends QRDetail {
 const QRDetailCard = (props: QRDetailCardProps) => {
   return (
     <>
-      <Card withBorder padding="xl" radius="md">
+      <Card withBorder radius="md">
         <div>
           {props.qrObject && (
             <QRCodeComponent
