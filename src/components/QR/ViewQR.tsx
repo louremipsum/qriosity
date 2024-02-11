@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import Shell from "@/components/common/Shell";
 import {
   ActionIcon,
@@ -14,12 +14,65 @@ import {
   Badge,
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
-import { IconAdjustments } from "@tabler/icons-react";
+import { IconAdjustments, IconPlus } from "@tabler/icons-react";
 import QRDetailCard from "@/components/QR/QRDetailCard";
 import type { QRList, extendedQRList } from "@/types/viewqr";
+import Link from "next/link";
 
 type Props = {
   qrList: extendedQRList[];
+};
+
+type QRCardProps = {
+  item: extendedQRList;
+  setSelected: Dispatch<SetStateAction<QRList | null>>;
+  open: () => void;
+};
+
+const QRCard = ({ item, setSelected, open }: QRCardProps) => {
+  return (
+    <Card
+      shadow={"sm"}
+      padding={"md"}
+      radius={"lg"}
+      withBorder
+      key={item.id}
+      mb={"md"}
+    >
+      <Group justify="space-between" mb={"md"}>
+        <Flex direction="column">
+          <Text size={"sm"} fw={400} c={"dimmed"}>
+            Name
+          </Text>
+          <Text size={"xl"} fw={500}>
+            {item.name}
+          </Text>
+          <Text size={"sm"}>{item.desc}</Text>
+        </Flex>
+        <ActionIcon
+          color="teal"
+          onClick={() => {
+            setSelected(item);
+            open();
+          }}
+        >
+          <IconAdjustments />
+        </ActionIcon>
+      </Group>
+      <Badge
+        color={
+          item.status === "Active"
+            ? "teal"
+            : item.status === "Scheduled"
+            ? "blue"
+            : "red"
+        }
+        variant="light"
+      >
+        {item.status}
+      </Badge>
+    </Card>
+  );
 };
 
 const ViewQR = ({ qrList }: Props) => {
@@ -46,20 +99,32 @@ const ViewQR = ({ qrList }: Props) => {
       </Modal>
       <Shell>
         <Stack mt={"md"}>
-          <Text
-            size={"3rem"}
-            fw={900}
-            variant="gradient"
-            ta={"left"}
-            mb={"xl"}
-            gradient={{
-              from: "rgba(0, 153, 224, 1)",
-              to: "rgba(0, 255, 94, 1)",
-              deg: 174,
-            }}
-          >
-            View Qr
-          </Text>
+          <Group justify="space-between" mb={"xl"}>
+            <Text
+              size={"3rem"}
+              fw={900}
+              variant="gradient"
+              ta={"left"}
+              gradient={{
+                from: "rgba(0, 153, 224, 1)",
+                to: "rgba(0, 255, 94, 1)",
+                deg: 174,
+              }}
+            >
+              View Qr
+            </Text>
+            <Link href="/dashboard/createqr">
+              <ActionIcon
+                color="teal"
+                variant="filled"
+                size={"xl"}
+                mr={"sm"}
+                radius={"md"}
+              >
+                <IconPlus />
+              </ActionIcon>
+            </Link>
+          </Group>
           {qrList.length === 0 ? (
             <Stack align="center">
               <Image
@@ -76,48 +141,13 @@ const ViewQR = ({ qrList }: Props) => {
               </Text>
             </Stack>
           ) : (
-            qrList.map((item) => (
-              <Card
-                shadow={"sm"}
-                padding={"md"}
-                radius={"lg"}
-                withBorder
-                key={item.id}
-                mb={"md"}
-              >
-                <Group justify="space-between" mb={"md"}>
-                  <Flex direction="column">
-                    <Text size={"sm"} fw={400} c={"dimmed"}>
-                      Name
-                    </Text>
-                    <Text size={"xl"} fw={500}>
-                      {item.name}
-                    </Text>
-                    <Text size={"sm"}>{item.desc}</Text>
-                  </Flex>
-                  <ActionIcon
-                    color="teal"
-                    onClick={() => {
-                      setSelected(item);
-                      open();
-                    }}
-                  >
-                    <IconAdjustments />
-                  </ActionIcon>
-                </Group>
-                <Badge
-                  color={
-                    item.status === "Active"
-                      ? "teal"
-                      : item.status === "Scheduled"
-                      ? "blue"
-                      : "red"
-                  }
-                  variant="light"
-                >
-                  {item.status}
-                </Badge>
-              </Card>
+            qrList.map((item, index) => (
+              <QRCard
+                item={item}
+                setSelected={setSelected}
+                open={open}
+                key={index}
+              />
             ))
           )}
         </Stack>
