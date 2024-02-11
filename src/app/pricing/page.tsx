@@ -22,6 +22,7 @@ import {
   IconCircleCheck,
   IconCircleArrowUpRightFilled,
   IconCreditCardPay,
+  IconPhone,
 } from "@tabler/icons-react";
 import { UserProfile, useUser } from "@auth0/nextjs-auth0/client";
 import { useRouter } from "next/navigation";
@@ -45,13 +46,14 @@ interface PricePlan {
 const price: PricePlan[] = [
   {
     title: "Hobby",
-    img: "/Basic_Plan.svg",
+    img: "/Hobby.svg",
     alt: "Hobby plan illustration",
     use: "Ideal for individuals and quick testing",
     monthlyPrice: "$0",
     annualPrice: "$0",
     features: [
-      "5 temporary QR codes with unlimited updates",
+      "2 temporary QR codes",
+      "Unlimited Updates to QR codes",
       "Expiry based on date, time, or scans",
       "Maximum 100 scans per QR",
     ],
@@ -67,15 +69,16 @@ const price: PricePlan[] = [
   },
   {
     title: "Pro",
-    img: "/Starter.svg",
+    img: "/Pro.svg",
     alt: "Pro plan illustration",
     use: "Empower small businesses with versatility",
     monthlyPrice: "$6.99",
-    annualPrice: "$5.99",
+    annualPrice: "$4.99",
     features: [
-      "100 Temporary QR codes with unlimited updates",
+      "1000 Temporary QR codes",
+      "Unlimited Updates to QR codes",
       "Expiry and scheduling of QR codes",
-      "Unlimited scans and analytics",
+      "Analytics",
     ],
     btnText: "Buy Now",
     hrefMonthly: "STRIPE_PRICE_PRO_MON",
@@ -84,8 +87,8 @@ const price: PricePlan[] = [
     disabled: false,
   },
   {
-    title: "Business ",
-    img: "/Enterprise.svg",
+    title: "Business",
+    img: "/Business.svg",
     alt: "Business plan illustration",
     use: "Unleash the ultimate QR experience for growth",
     // monthlyPrice: "$15.99",
@@ -96,11 +99,11 @@ const price: PricePlan[] = [
     //   "Priority access to latest features",
     //   "Dedicated support and onboarding",
     // ],
-    btnText: "Coming Soon",
-    hrefMonthly: "#",
-    hrefYearly: "#",
-    btnIcon: <IconCreditCardPay style={{ width: rem(16), height: rem(16) }} />,
-    disabled: true,
+    btnText: "Contact Us",
+    hrefMonthly: "/support",
+    hrefYearly: "/support",
+    btnIcon: <IconPhone style={{ width: rem(16), height: rem(16) }} />,
+    disabled: false,
   },
 ];
 
@@ -115,6 +118,10 @@ const dynamicLink = (
       router.push(
         `/api/auth/login?returnTo=${encodeURIComponent("/dashboard/createqr")}`
       );
+      return;
+    }
+    if (item.title === "Business") {
+      router.push("/support");
       return;
     }
     if (!user) {
@@ -173,7 +180,7 @@ const Pricing = () => {
             value={pricingPlan}
             onChange={setPricingPlan}
           />
-          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }}>
+          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} mb={40}>
             {price.map((item, index) => (
               <Card
                 key={index}
