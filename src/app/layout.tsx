@@ -10,6 +10,7 @@ import { Notifications } from "@mantine/notifications";
 import NextTopLoader from "nextjs-toploader";
 import { theme } from "@/utils/theme";
 import StoreProvider from "./StoreProvider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -79,6 +80,7 @@ export default function RootLayout({
             <Notifications />
             <StoreProvider>{children}</StoreProvider>
           </MantineProvider>
+          <SpeedInsights />
         </body>
       </UserProvider>
     </html>
