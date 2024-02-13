@@ -120,8 +120,6 @@ const UserMenu = ({ user }: userProfileProps) => {
               />
             }
             color="red"
-            mt={"xs"}
-            mb={"xs"}
           >
             <Text span fz={"md"}>
               Logout
