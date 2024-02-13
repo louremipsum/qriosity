@@ -17,8 +17,8 @@ interface QueryEmailProps {
   message: string;
 }
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
+const baseUrl = process.env.WEBSITE_URL
+  ? `https://${process.env.WEBSITE_URL}`
   : "";
 
 export const QueryEmail: React.FC<Readonly<QueryEmailProps>> = ({

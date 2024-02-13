@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { QueryEmail } from "@email/QueryEmail";
+import { QueryEmail } from "@/components/emails/QueryEmail";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
