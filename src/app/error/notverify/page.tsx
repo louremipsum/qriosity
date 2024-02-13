@@ -1,8 +1,26 @@
 "use client";
 
-import { Button, Container, Group, Image, Stack, Text } from "@mantine/core";
+import {
+  Button,
+  Container,
+  Group,
+  Image,
+  Stack,
+  Text,
+  Flex,
+  Loader,
+} from "@mantine/core";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+
+const fallbackLoader = () => {
+  return (
+    <Flex justify="center">
+      <Loader size={50} color="white" type="bars" />
+    </Flex>
+  );
+};
 
 const NotVerfiedEmail = () => {
   const searchParams = useSearchParams();
@@ -39,4 +57,12 @@ const NotVerfiedEmail = () => {
   );
 };
 
-export default NotVerfiedEmail;
+const NotVerfiedEmailPage = () => {
+  return (
+    <Suspense fallback={fallbackLoader()}>
+      <NotVerfiedEmail />
+    </Suspense>
+  );
+};
+
+export default NotVerfiedEmailPage;
