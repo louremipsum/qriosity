@@ -9,14 +9,16 @@ const cache = getCache();
 const ratelimit = new Ratelimit({
   redis: redis,
   analytics: true,
-  limiter: Ratelimit.slidingWindow(2, "5s"),
+  limiter: Ratelimit.slidingWindow(2, "3s"),
   prefix: "@upstash/ratelimit",
   ephemeralCache: cache,
 });
 
 export async function GET(request: NextRequest) {
+  console.log("GET /api/accessToken\n", request);
   try {
     const id = request.ip ?? "anonymous";
+    console.log("IP Address->", id);
     const limit = await ratelimit.limit(id ?? "anonymous");
     if (!limit.success) {
       return new Response("Rate limit exceeded", { status: 429 });
