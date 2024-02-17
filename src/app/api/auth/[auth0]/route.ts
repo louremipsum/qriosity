@@ -17,7 +17,13 @@ const onError: AppRouterOnError = (req: NextRequest, error: HandlerError) => {
     "\nRequest:",
     req
   );
-  redirect(`/error/notverify${req.nextUrl.search}`);
+  if (
+    req.nextUrl.searchParams
+      .get("error_description")
+      ?.startsWith("Verify your email")
+  )
+    redirect(`/error/notverify${req.nextUrl.search}`);
+  redirect(`/error/internalerror${req.nextUrl.search}`);
 };
 
 export const GET = handleAuth({
