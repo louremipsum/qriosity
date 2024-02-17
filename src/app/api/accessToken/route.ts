@@ -3,22 +3,24 @@ import { NextRequest } from "next/server";
 import redis from "./redis";
 import { getAuth0M2MTokenWithCache } from "./token";
 import { getCache } from "@/cache/ratelimitCache";
+import { ipAddress } from "@vercel/edge";
+
+export const runtime = "edge";
 
 const cache = getCache();
 
 const ratelimit = new Ratelimit({
   redis: redis,
   analytics: true,
-  limiter: Ratelimit.slidingWindow(2, "3s"),
+  limiter: Ratelimit.slidingWindow(5, "3s"),
   prefix: "@upstash/ratelimit",
   ephemeralCache: cache,
 });
 
 export async function GET(request: NextRequest) {
-  console.log("GET /api/accessToken\n", request);
   try {
-    const id = request.ip ?? "anonymous";
-    console.log("IP Address->", id);
+    const id = ipAddress(request) || request.headers.get("x-forwarded-for");
+
     const limit = await ratelimit.limit(id ?? "anonymous");
     if (!limit.success) {
       return new Response("Rate limit exceeded", { status: 429 });

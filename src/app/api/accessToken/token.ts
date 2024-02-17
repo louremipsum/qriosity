@@ -1,10 +1,10 @@
-import jwt from "jsonwebtoken";
 import { getAuth0M2MToken } from "./auth0";
+import { decodeJwt } from "jose";
 import redis from "./redis";
 
 function getExpiration(token: string): number {
-  const tokenOptions = jwt.decode(token, { json: true });
-  return tokenOptions?.exp || new Date().getDate();
+  const { exp } = decodeJwt(token);
+  return exp || Math.floor(Date.now() / 1000);
 }
 
 export async function getAuth0M2MTokenWithCache(
