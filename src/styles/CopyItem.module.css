@@ -4,6 +4,7 @@
   padding: 0.5rem;
   display: flex;
   text-wrap: pretty;
+  justify-content: space-between;
   width: 60%;
   @media (max-width: $mantine-breakpoint-lg) {
     width: 70%;
