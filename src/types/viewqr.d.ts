@@ -13,6 +13,7 @@ export type QRList = {
   desc: string;
   infiniteScans: boolean;
   linkToQr: string;
+  lastModified: Date;
 };
 
 export type resp = {
@@ -28,6 +29,7 @@ export type resp = {
   desc: { S: string };
   infiniteScans: { BOOL: boolean };
   linkToQr: { S: string };
+  lastModified: { S: string };
 };
 
 export type QRDetail = {
@@ -45,8 +47,13 @@ export type QRDetail = {
   linkToQr: string;
 };
 
-type status = "Active" | "Scheduled" | "Expired";
+export type status = "Active" | "Scheduled" | "Expired";
 
 export interface extendedQRList extends QRList {
   status: status;
 }
+
+export type LastEvaluatedKeyType = {
+  id: { S: string };
+  user: { S: string };
+};
