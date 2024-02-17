@@ -16,12 +16,12 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Qriosity",
-  description: "Make Temporary QR codes",
-  metadataBase: new URL("https://qriosityx.vercel.app/"),
+  description: "Make Dynamic Temporary QR codes",
+  metadataBase: new URL("https://www.qriosity.xyz/"),
   openGraph: {
     title: "Qriosity",
-    description: "Make temporary QR codes",
-    url: "https://qriosityx.vercel.app/",
+    description: "Make dynamic temporary QR codes",
+    url: "https://www.qriosity.xyz/",
     siteName: "Qriosity",
     images: [
       {
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
       "https://github.com/louremipsum/qriosity/blob/main/public/Group_2.png?raw=true",
     ],
   },
-  bookmarks: ["https://qriosityx.vercel.app/"],
+  bookmarks: ["https://www.qriosity.xyz/"],
   other: {
     "google-site-verification": process.env.GSV!,
   },
