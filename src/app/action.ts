@@ -3,39 +3,31 @@ import { CheckURLResponse, FormValues } from "@/types/form";
 import axios, { AxiosResponse } from "axios";
 import { getSession } from "@auth0/nextjs-auth0";
 import { ActionResponse } from "@/types/form";
-import { QRDetail } from "@/types/viewqr";
+import { LastEvaluatedKeyType, QRDetail } from "@/types/viewqr";
 import { revalidatePath } from "next/cache";
 import { validate as uuidValidate, version as uuidVersion } from "uuid";
+import processQRList from "@/utils/processQRList";
 
 /**
  * Creates an access token using the provided manageAPI flag.
  * @param manageAPI - A boolean flag indicating whether the access token is for Management API or not.
  * @returns A Promise that resolves to the access token data.
  */
-const createAccessToken = async (manageAPI: boolean) => {
-  const options = {
-    method: "POST",
-    url: process.env.URL_AT,
-    headers: { "content-type": "application/x-www-form-urlencoded" },
-    data: new URLSearchParams({
-      client_id: manageAPI
-        ? process.env.AUTH0_ACCOUNT_MANAGE_CLIENT_ID!
-        : process.env.AUTH0_CLIENT_ID!,
-      client_secret: manageAPI
-        ? process.env.AUTH0_ACCOUNT_MANAGE_CLIENT_SECRET!
-        : process.env.AUTH0_CLIENT_SECRET!,
-      audience: manageAPI
-        ? process.env.AUTH0_AUD_MANAGE!
-        : process.env.AUTH0_AUDIENCE!,
-      grant_type: "client_credentials",
-    }),
-  };
-
+const createAccessToken = async (manageAPI: boolean): Promise<string> => {
   try {
-    const response: AxiosResponse = await axios(options);
-    return response.data;
+    const token = await fetch(
+      `${process.env.VERCEL_URL}/api/accessToken?manageAPI=${manageAPI}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-secret-key": process.env.INTERNAL_SECRET_KEY!,
+        },
+      }
+    ).then((res) => res.json());
+    return token.accessToken;
   } catch (error) {
-    console.error(error);
+    return "Rate Limit Exceeded";
   }
 };
 
@@ -73,7 +65,7 @@ const checkURL = async (url: string): Promise<CheckURLResponse> => {
 
 const formAction = async (formValues: FormValues) => {
   const session = await getSession();
-  const currentUser = JSON.stringify(session?.user.sub, null, 2);
+  const currentUser = session?.user.sub;
   const formWithUser = { ...formValues, user: currentUser };
   const response = await checkURL(formWithUser.link);
   if (response.matches) {
@@ -84,11 +76,18 @@ const formAction = async (formValues: FormValues) => {
     return respAction;
   }
   const token = await createAccessToken(false);
+  if (token === "Rate Limit Exceeded") {
+    const respAction: ActionResponse = {
+      action: "QRCreationFailed",
+      message: "Rate Limit Exceeded",
+    };
+    return respAction;
+  }
   try {
     const res = await axios.post(process.env.CREATE_QR!, formWithUser, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token.access_token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     if (res.data.statusCode !== 200) {
@@ -121,7 +120,7 @@ const formUpdateAction = async (dirtyFields: Partial<QRDetail>) => {
     const res = await axios.patch(process.env.UPDATE_QRS!, dirtyFields, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token.access_token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     if (res.data.statusCode !== 200)
@@ -148,7 +147,7 @@ const formDeleteAction = async (id: string) => {
   try {
     const response = await axios.delete(`${process.env.DELETE_QRS}/${id}`, {
       headers: {
-        Authorization: `Bearer ${token.access_token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     if (response.data.statusCode !== 200) {
@@ -230,7 +229,7 @@ const accessQRAction = async (id: string) => {
  *
  * @param {string} userID - The ID of the user.
  * @param {string} role - The new role for the user.
- * @returns {Promise<any>} - A promise that resolves to the response data or rejects with an error.
+ * @returns {string} -Response data or rejects with an error.
  */
 const changeUserRole = async (userID: string, role: string) => {
   const url = `${
@@ -239,7 +238,7 @@ const changeUserRole = async (userID: string, role: string) => {
   const token = await createAccessToken(true);
   const headers = {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${token.access_token}`,
+    Authorization: `Bearer ${token}`,
   };
 
   const data = {
@@ -263,24 +262,48 @@ const changeUserRole = async (userID: string, role: string) => {
   }
 };
 
-const viewQRAction = async (currentUser: string) => {
-  const token = await createAccessToken(false);
-  const resp = await fetch(
-    `${process.env.VIEW_QRS}?` + new URLSearchParams({ user_id: currentUser }),
-    {
+const viewQRAction = async (exclusiveStartKey: null | LastEvaluatedKeyType) => {
+  try {
+    const token = await createAccessToken(false);
+    const session = await getSession();
+    const currentUser = session?.user.sub;
+    // Create the query parameters
+    const params = new URLSearchParams({ user_id: currentUser });
+    if (exclusiveStartKey) {
+      params.append("exclusiveStartKey", JSON.stringify(exclusiveStartKey));
+    }
+
+    const resp = await fetch(`${process.env.VIEW_QRS}?${params.toString()}`, {
       headers: {
-        Authorization: `Bearer ${token.access_token}`,
+        Authorization: `Bearer ${token}`,
       },
       next: { revalidate: 3600 },
+    });
+    if (!resp.ok) {
+      throw new Error(`HTTP error! status: ${resp.status}\n ${resp}`);
     }
-  );
-  const data = await resp.json();
-  if (!data) {
+
+    const data = await resp.json();
+    if (!data) {
+      return {
+        notFound: true,
+        processedData: [],
+        lastEvaluatedKey: "",
+      };
+    }
+    const processedData = processQRList(data);
     return {
-      notFound: true,
+      notFound: false,
+      processedData: processedData,
+      lastEvaluatedKey: data.lastEvaluatedKey,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      processedData: [],
+      lastEvaluatedKey: "",
     };
   }
-  return data;
 };
 
 export {
