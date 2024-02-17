@@ -1,5 +1,4 @@
 "use client";
-import Shell from "@/components/common/Shell";
 import {
   Avatar,
   Group,
@@ -16,7 +15,7 @@ import Link from "next/link";
 const Profile = () => {
   const { user } = useUser();
   return (
-    <Shell>
+    <>
       <Stack mt={"md"}>
         <Text
           size={"3rem"}
@@ -71,7 +70,7 @@ const Profile = () => {
           Manage subscription
         </Button>
       </Link>
-    </Shell>
+    </>
   );
 };
 
