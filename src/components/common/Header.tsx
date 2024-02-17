@@ -171,13 +171,13 @@ const PublicHeader = ({ user, opened, toggle, matches }: PublicHeaderProps) => {
       )}
       <Group>
         {!user ? (
-          <a href="/api/auth/login?returnTo=/dashboard/createqr">
+          <a href="/api/auth/login?returnTo=/dashboard">
             <Button color="teal" variant="filled" radius={"md"}>
               Login
             </Button>
           </a>
         ) : (
-          <Link href="/dashboard/createqr">
+          <Link href="/dashboard">
             <Button
               color="teal"
               variant="filled"
