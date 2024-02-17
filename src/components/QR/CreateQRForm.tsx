@@ -109,7 +109,7 @@ const QForm = () => {
       </Modal>
       <Text
         size={"3rem"}
-        fw={900}
+        fw={700}
         variant="gradient"
         ta={"left"}
         mb={"xl"}
