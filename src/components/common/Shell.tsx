@@ -1,8 +1,6 @@
 "use client";
 import Header from "@/components/common/Header";
-import { setUserRole } from "@/lib/features/QRs/qrSlice";
-import { useAppDispatch } from "@/lib/hook";
-import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0/client";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import { AppShell, Box, Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "@styles/miscel.module.css";
@@ -84,9 +82,6 @@ const Navbar = () => {
 
 export default withPageAuthRequired(function Shell({ children }: Props) {
   const [opened, { toggle }] = useDisclosure();
-  const dispatch = useAppDispatch();
-  const { user } = useUser();
-  dispatch(setUserRole((user?.rolesArray as string[])[0]));
 
   return (
     <AppShell
