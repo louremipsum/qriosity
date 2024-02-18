@@ -9,8 +9,8 @@ import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import NextTopLoader from "nextjs-toploader";
 import { theme } from "@/utils/theme";
-import StoreProvider from "./StoreProvider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { QRProvider } from "@/context/Provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -78,7 +78,7 @@ export default function RootLayout({
           <MantineProvider theme={theme}>
             <NextTopLoader color={theme.colors?.teal![5]} showSpinner={false} />
             <Notifications />
-            <StoreProvider>{children}</StoreProvider>
+            <QRProvider>{children}</QRProvider>
           </MantineProvider>
           <SpeedInsights />
         </body>
