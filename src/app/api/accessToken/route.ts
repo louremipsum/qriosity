@@ -12,7 +12,7 @@ const cache = getCache();
 const ratelimit = new Ratelimit({
   redis: redis,
   analytics: true,
-  limiter: Ratelimit.slidingWindow(5, "3s"),
+  limiter: Ratelimit.slidingWindow(2, "3 s"),
   prefix: "@upstash/ratelimit",
   ephemeralCache: cache,
 });
@@ -25,10 +25,12 @@ export async function GET(request: NextRequest) {
     if (!limit.success) {
       return new Response("Rate limit exceeded", { status: 429 });
     }
+
     const secretKey = request.headers.get("x-secret-key");
     if (secretKey !== process.env.INTERNAL_SECRET_KEY) {
       return new Response("Unauthorized", { status: 403 });
     }
+
     const { searchParams } = new URL(request.url);
     const manageAPI = searchParams.get("manageAPI");
     if (manageAPI === null) {
