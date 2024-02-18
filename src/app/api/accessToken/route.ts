@@ -1,30 +1,27 @@
-import { Ratelimit } from "@upstash/ratelimit";
 import { NextRequest } from "next/server";
-import redis from "./redis";
 import { getAuth0M2MTokenWithCache } from "./token";
-import { getCache } from "@/cache/ratelimitCache";
-import { ipAddress } from "@vercel/edge";
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
-const cache = getCache();
+// const cache = getCache();
 
-const ratelimit = new Ratelimit({
-  redis: redis,
-  analytics: true,
-  limiter: Ratelimit.slidingWindow(2, "3 s"),
-  prefix: "@upstash/ratelimit",
-  ephemeralCache: cache,
-});
+// console.log("cache from route-> ", cache);
+// const ratelimit = new Ratelimit({
+//   redis: redis,
+//   analytics: true,
+//   limiter: Ratelimit.slidingWindow(1, "10 s"),
+//   prefix: "@upstash/ratelimit",
+//   ephemeralCache: cache,
+// });
 
 export async function GET(request: NextRequest) {
   try {
-    const id = ipAddress(request) || request.headers.get("x-forwarded-for");
-
-    const limit = await ratelimit.limit(id ?? "anonymous");
-    if (!limit.success) {
-      return new Response("Rate limit exceeded", { status: 429 });
-    }
+    // const id = ipAddress(request) || request.headers.get("x-forwarded-for");
+    // console.log("id-> ", id);
+    // const limit = await ratelimit.limit(id ?? "anonymous");
+    // if (!limit.success) {
+    //   return new Response("Rate limit exceeded", { status: 429 });
+    // }
 
     const secretKey = request.headers.get("x-secret-key");
     if (secretKey !== process.env.INTERNAL_SECRET_KEY) {
