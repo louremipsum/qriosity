@@ -16,7 +16,7 @@ import processQRList from "@/utils/processQRList";
 const createAccessToken = async (manageAPI: boolean): Promise<string> => {
   try {
     const token = await fetch(
-      `${process.env.VERCEL_URL}/api/accessToken?manageAPI=${manageAPI}`,
+      `${process.env.WEBSITE_URL}/api/accessToken?manageAPI=${manageAPI}`,
       {
         method: "GET",
         headers: {
@@ -129,7 +129,7 @@ const formUpdateAction = async (dirtyFields: Partial<QRDetail>) => {
         message:
           "There was an error while updating the QR Code. Please try again later",
       };
-    revalidatePath("/dashboard/viewqr");
+    // revalidatePath("/dashboard/viewqr");
     return {
       action: "QRCodeUpdated",
       message: res.data.message,
@@ -157,7 +157,7 @@ const formDeleteAction = async (id: string) => {
           "There was an error while deleting the QR Code. Please try again later",
       };
     }
-    revalidatePath("/dashboard/viewqr");
+    // revalidatePath("/dashboard/viewqr");
     return {
       action: "QRCodeDeleted",
       message: response.data.message,
@@ -272,7 +272,6 @@ const viewQRAction = async (exclusiveStartKey: null | LastEvaluatedKeyType) => {
     if (exclusiveStartKey) {
       params.append("exclusiveStartKey", JSON.stringify(exclusiveStartKey));
     }
-
     const resp = await fetch(`${process.env.VIEW_QRS}?${params.toString()}`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -280,7 +279,7 @@ const viewQRAction = async (exclusiveStartKey: null | LastEvaluatedKeyType) => {
       next: { revalidate: 3600 },
     });
     if (!resp.ok) {
-      throw new Error(`HTTP error! status: ${resp.status}\n ${resp}`);
+      throw new Error(`HTTP error! status: ${resp.status}\n ${resp.json()}`);
     }
 
     const data = await resp.json();
@@ -306,6 +305,32 @@ const viewQRAction = async (exclusiveStartKey: null | LastEvaluatedKeyType) => {
   }
 };
 
+const getQRCount = async () => {
+  try {
+    const session = await getSession();
+    const currentUser = session?.user.sub;
+    // Create the query parameters
+    const params = new URLSearchParams({ user_id: currentUser });
+    const resp = await fetch(`${process.env.COUNT}?${params.toString()}`, {
+      headers: {},
+      next: { revalidate: 3600 },
+    });
+    if (!resp.ok) {
+      throw new Error(`HTTP error! status: ${resp.status}\n ${resp}`);
+    }
+
+    const data = await resp.json();
+    return {
+      num: data.num,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      num: undefined,
+    };
+  }
+};
+
 export {
   formAction,
   formUpdateAction,
@@ -313,4 +338,5 @@ export {
   accessQRAction,
   changeUserRole,
   viewQRAction,
+  getQRCount,
 };
