@@ -6,7 +6,6 @@ import type {
   QRList,
   extendedQRList,
 } from "@/types/viewqr";
-import { useUser } from "@auth0/nextjs-auth0/client";
 import {
   ActionIcon,
   Badge,
@@ -128,7 +127,6 @@ const ViewQR = ({ qrList, lastEvaluatedKey }: Props) => {
   const [lastEvalKey, setLastEvalKey] =
     useState<LastEvaluatedKeyType>(lastEvaluatedKey);
   const [moreQRs, setMoreQRs] = useState(false);
-  const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const matchBigScreen = useMediaQuery("(min-width: 130em)");
 
