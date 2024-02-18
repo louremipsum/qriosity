@@ -10,6 +10,7 @@ import {
   Modal,
   Stack,
   Image,
+  Box,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
@@ -20,13 +21,14 @@ import {
 } from "@mantine/form";
 import { IconTrash } from "@tabler/icons-react";
 import { DateTimePicker } from "@mantine/dates";
-import { IconCalendar } from "@tabler/icons-react";
+import { IconCalendar, IconLock } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { notifications } from "@mantine/notifications";
 import type { QRDetail } from "@/types/viewqr";
 import { formDeleteAction, formUpdateAction } from "@/app/action";
 import { SaveButton } from "../common/SubmitButton";
 import { useState } from "react";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 const calcDirtyFields = (form: UseFormReturnType<QRDetail>) => {
   const currentValues = form.values;
@@ -72,9 +74,9 @@ const handleDelete = async (
       title: "Success",
       message: response.message,
     });
-    setIsDeleting(false);
     closeModal();
   }
+  setIsDeleting(false);
 };
 
 interface DeleteModalProps {
@@ -135,9 +137,10 @@ interface QRFormProps {
   form: UseFormReturnType<QRDetail>;
   handleSave: () => Promise<void>;
   open: () => void;
+  role: string;
 }
 
-const QRForm: React.FC<QRFormProps> = ({ form, handleSave, open }) => (
+const QRForm: React.FC<QRFormProps> = ({ form, handleSave, open, role }) => (
   <form action={handleSave}>
     <SimpleGrid
       cols={{ base: 1, sm: 2 }}
@@ -171,19 +174,52 @@ const QRForm: React.FC<QRFormProps> = ({ form, handleSave, open }) => (
         checked={form.values.infiniteScans}
         {...form.getInputProps("infiniteScans")}
       />
-      <DateTimePicker
-        withAsterisk
-        label="Start Date"
-        valueFormat="DD MMM YYYY hh:mm A"
-        placeholder="When should the QR start?"
-        rightSection={
-          <IconCalendar style={{ width: rem(16), height: rem(16) }} />
-        }
-        mt={"lg"}
-        color="teal"
-        minDate={new Date()}
-        {...form.getInputProps("start")}
-      />
+      {role === "Hobby" ? (
+        <Box
+          mt={"lg"}
+          style={{
+            border: "1px solid #C9C9C9",
+            borderRadius: "12px",
+            backgroundColor: "#F5F5F5",
+            cursor: "not-allowed",
+          }}
+          p={"xs"}
+        >
+          <Stack>
+            <Group justify="space-between">
+              <Text fw={500}>Available in Pro</Text>
+              <IconLock style={{ color: "#02acb0" }} />
+            </Group>
+            <DateTimePicker
+              withAsterisk
+              label="Start Date"
+              valueFormat="DD MMM YYYY hh:mm A"
+              placeholder="When should the QR start?"
+              rightSection={
+                <IconCalendar style={{ width: rem(16), height: rem(16) }} />
+              }
+              color="teal"
+              disabled
+              minDate={new Date()}
+              {...form.getInputProps("start")}
+            />
+          </Stack>
+        </Box>
+      ) : (
+        <DateTimePicker
+          withAsterisk
+          label="Start Date"
+          valueFormat="DD MMM YYYY hh:mm A"
+          placeholder="When should the QR start?"
+          rightSection={
+            <IconCalendar style={{ width: rem(16), height: rem(16) }} />
+          }
+          mt={"lg"}
+          color="teal"
+          minDate={new Date()}
+          {...form.getInputProps("start")}
+        />
+      )}
       <DateTimePicker
         withAsterisk
         label="Expiry Date"
@@ -198,6 +234,12 @@ const QRForm: React.FC<QRFormProps> = ({ form, handleSave, open }) => (
         minDate={new Date()}
         {...form.getInputProps("expiry")}
       />
+      <TextInput
+        withAsterisk
+        label="Link"
+        placeholder="What link should be converted to QR Code?"
+        {...form.getInputProps("link")}
+      />
       <Checkbox
         label="No Expiry?"
         description="The QR will not have an expiry date"
@@ -205,12 +247,6 @@ const QRForm: React.FC<QRFormProps> = ({ form, handleSave, open }) => (
         color="teal"
         checked={form.values.neverExpires}
         {...form.getInputProps("neverExpires")}
-      />
-      <TextInput
-        withAsterisk
-        label="Link"
-        placeholder="What link should be converted to QR Code?"
-        {...form.getInputProps("link")}
       />
     </SimpleGrid>
     <Group justify="space-between">
@@ -265,6 +301,9 @@ const UpdateQRForm = (props: QRDetailCardProps) => {
     },
   });
 
+  const { user } = useUser();
+  const role = (user?.rolesArray as string[])[0];
+
   const handleSave = async () => {
     if (form.validate().hasErrors) return;
     const dirtyValues = calcDirtyFields(form);
@@ -294,7 +333,7 @@ const UpdateQRForm = (props: QRDetailCardProps) => {
         form={form}
         props={props}
       />
-      <QRForm form={form} handleSave={handleSave} open={open} />
+      <QRForm form={form} handleSave={handleSave} open={open} role={role} />
     </>
   );
 };

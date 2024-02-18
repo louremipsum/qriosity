@@ -1,27 +1,30 @@
 "use client";
-import {
-  TextInput,
-  Text,
-  SimpleGrid,
-  NumberInput,
-  Image,
-  rem,
-  Modal,
-  Checkbox,
-} from "@mantine/core";
-import { useDisclosure, useScrollIntoView } from "@mantine/hooks";
-import { notifications } from "@mantine/notifications";
-import { isInRange, isNotEmpty, useForm } from "@mantine/form";
-import { DateTimePicker } from "@mantine/dates";
-import { IconCalendar } from "@tabler/icons-react";
-import dayjs from "dayjs";
-import { useState } from "react";
-import { QRCode } from "qrcode";
-import QRCodeComponent from "./QRCodeGen";
-import type { FormValues } from "@/types/form";
-import type { CheckURLResponse } from "@/types/form";
 import { formAction } from "@/app/action";
 import { SubmitButton } from "@/components/common/SubmitButton";
+import type { CheckURLResponse, FormValues } from "@/types/form";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import {
+  Box,
+  Checkbox,
+  Group,
+  Image,
+  Modal,
+  NumberInput,
+  SimpleGrid,
+  Stack,
+  Text,
+  TextInput,
+  rem,
+} from "@mantine/core";
+import { DateTimePicker } from "@mantine/dates";
+import { isInRange, isNotEmpty, useForm } from "@mantine/form";
+import { useDisclosure, useScrollIntoView } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
+import { IconCalendar, IconLock } from "@tabler/icons-react";
+import dayjs from "dayjs";
+import { QRCode } from "qrcode";
+import { useState } from "react";
+import QRCodeComponent from "./QRCodeGen";
 
 const QForm = () => {
   const dateIcon = <IconCalendar style={{ width: rem(16), height: rem(16) }} />;
@@ -30,6 +33,8 @@ const QForm = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [match, setMatch] = useState<CheckURLResponse>({});
   const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>();
+  const { user } = useUser();
+  const role = (user?.rolesArray as string[])[0];
   const form = useForm<FormValues>({
     name: "qr-form",
     initialValues: {
@@ -157,17 +162,48 @@ const QForm = () => {
             color="teal"
             {...form.getInputProps("infiniteScans")}
           />
-          <DateTimePicker
-            withAsterisk
-            label="Start Date"
-            valueFormat="DD MMM YYYY hh:mm A"
-            placeholder="When should the QR start?"
-            rightSection={dateIcon}
-            mt={"lg"}
-            color="teal"
-            minDate={new Date()}
-            {...form.getInputProps("start")}
-          />
+          {role === "Hobby" ? (
+            <Box
+              mt={"lg"}
+              style={{
+                border: "1px solid #C9C9C9",
+                borderRadius: "12px",
+                backgroundColor: "#F5F5F5",
+                cursor: "not-allowed",
+              }}
+              p={"xs"}
+            >
+              <Stack>
+                <Group justify="space-between">
+                  <Text fw={500}>Available in Pro</Text>
+                  <IconLock style={{ color: "#02acb0" }} />
+                </Group>
+                <DateTimePicker
+                  withAsterisk
+                  label="Start Date"
+                  valueFormat="DD MMM YYYY hh:mm A"
+                  placeholder="When should the QR start?"
+                  rightSection={dateIcon}
+                  color="teal"
+                  disabled
+                  minDate={new Date()}
+                  {...form.getInputProps("start")}
+                />
+              </Stack>
+            </Box>
+          ) : (
+            <DateTimePicker
+              withAsterisk
+              label="Start Date"
+              valueFormat="DD MMM YYYY hh:mm A"
+              placeholder="When should the QR start?"
+              rightSection={dateIcon}
+              mt={"lg"}
+              color="teal"
+              minDate={new Date()}
+              {...form.getInputProps("start")}
+            />
+          )}
           <DateTimePicker
             withAsterisk
             label="Expiry Date"

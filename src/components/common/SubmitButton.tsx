@@ -1,23 +1,48 @@
 "use client";
-import { Group, Button } from "@mantine/core";
+import { QRContext } from "@/context/Context";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { Button, Group, Stack, Text } from "@mantine/core";
+import {
+  IconDeviceFloppy,
+  IconInfoCircleFilled,
+  IconSend,
+} from "@tabler/icons-react";
+import GetQR from "@utils/GetQR";
+import { useContext } from "react";
 import { useFormStatus } from "react-dom";
-import { IconDeviceFloppy, IconSend } from "@tabler/icons-react";
-// import { useAppSelector } from "@lib/hook";
 
 export function SubmitButton() {
   const { pending } = useFormStatus();
-  // const qrCount = useAppSelector((state) => state.app.qrCount);
-  // const userRole = useAppSelector((state) => state.app.userRole);
+  const { user } = useUser();
+  const qrContext = useContext(QRContext);
+  const qrCount = qrContext?.numQRs;
+  const isHobbyUser = (user?.rolesArray as string[])[0] === "Hobby";
+  const isQRCountLimitReached = qrCount! >= 2;
+  const isDataLoaded = qrContext?.dataLoaded; // Get dataLoaded from the context
+
   return (
     <Group mt="xl">
-      <Button
-        type="submit"
-        color="teal"
-        loading={pending}
-        // disabled={qrCount >= 2}
-      >
-        Submit
-      </Button>
+      <GetQR />
+      {isDataLoaded &&
+        (isHobbyUser && isQRCountLimitReached ? (
+          <>
+            <Stack mt={"md"}>
+              <Group>
+                <IconInfoCircleFilled stroke={1} style={{ color: "#02acb0" }} />
+                <Text c="gray" size="sm">
+                  You can only create up to 2 QR codes
+                </Text>
+              </Group>
+              <Button type="button" color="teal" disabled>
+                Limit Reached
+              </Button>
+            </Stack>
+          </>
+        ) : (
+          <Button type="submit" color="teal" loading={pending}>
+            Submit
+          </Button>
+        ))}
     </Group>
   );
 }
