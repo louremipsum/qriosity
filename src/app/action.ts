@@ -23,11 +23,12 @@ const createAccessToken = async (manageAPI: boolean): Promise<string> => {
           "Content-Type": "application/json",
           "x-secret-key": process.env.INTERNAL_SECRET_KEY!,
         },
+        cache: "no-store",
       }
     ).then((res) => res.json());
     return token.accessToken;
   } catch (error) {
-    return "Rate Limit Exceeded";
+    return (error as Error).message;
   }
 };
 
@@ -272,17 +273,20 @@ const viewQRAction = async (exclusiveStartKey: null | LastEvaluatedKeyType) => {
     if (exclusiveStartKey) {
       params.append("exclusiveStartKey", JSON.stringify(exclusiveStartKey));
     }
-    const resp = await fetch(`${process.env.VIEW_QRS}?${params.toString()}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      next: { revalidate: 3600 },
-    });
-    if (!resp.ok) {
-      throw new Error(`HTTP error! status: ${resp.status}\n ${resp.json()}`);
+    const resp = await axios.get(
+      `${process.env.VIEW_QRS}?${params.toString()}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (resp.status !== 200) {
+      throw new Error(`HTTP error! status: ${resp.status}\n`);
     }
 
-    const data = await resp.json();
+    const data = resp.data;
     if (!data) {
       return {
         notFound: true,
