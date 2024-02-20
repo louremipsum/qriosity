@@ -4,18 +4,26 @@ import axios, { AxiosResponse } from "axios";
 import { getSession } from "@auth0/nextjs-auth0";
 import { ActionResponse } from "@/types/form";
 import { LastEvaluatedKeyType, QRDetail } from "@/types/viewqr";
-import { revalidatePath } from "next/cache";
 import { validate as uuidValidate, version as uuidVersion } from "uuid";
+import { decodeJwt } from "jose";
 import processQRList from "@/utils/processQRList";
+
+function getExpiration(token: string): number {
+  const { exp } = decodeJwt(token);
+  return exp || Math.floor(Date.now() / 1000);
+}
 
 /**
  * Creates an access token using the provided manageAPI flag.
  * @param manageAPI - A boolean flag indicating whether the access token is for Management API or not.
  * @returns A Promise that resolves to the access token data.
  */
-const createAccessToken = async (manageAPI: boolean): Promise<string> => {
+const createAccessToken = async (
+  manageAPI: boolean,
+  retryCount = 0
+): Promise<string> => {
   try {
-    const token = await fetch(
+    const response = await fetch(
       `${process.env.WEBSITE_URL}/api/accessToken?manageAPI=${manageAPI}`,
       {
         method: "GET",
@@ -25,8 +33,17 @@ const createAccessToken = async (manageAPI: boolean): Promise<string> => {
         },
         cache: "no-store",
       }
-    ).then((res) => res.json());
-    return token.accessToken;
+    );
+    const token = await response.json();
+    const exp = getExpiration(token.accessToken);
+    if (Date.now() <= exp) {
+      if (retryCount >= 3) {
+        throw new Error("Token refresh limit exceeded");
+      }
+      return await createAccessToken(manageAPI, retryCount + 1);
+    } else {
+      return token.accessToken;
+    }
   } catch (error) {
     return (error as Error).message;
   }
@@ -130,7 +147,6 @@ const formUpdateAction = async (dirtyFields: Partial<QRDetail>) => {
         message:
           "There was an error while updating the QR Code. Please try again later",
       };
-    // revalidatePath("/dashboard/viewqr");
     return {
       action: "QRCodeUpdated",
       message: res.data.message,
@@ -158,7 +174,6 @@ const formDeleteAction = async (id: string) => {
           "There was an error while deleting the QR Code. Please try again later",
       };
     }
-    // revalidatePath("/dashboard/viewqr");
     return {
       action: "QRCodeDeleted",
       message: response.data.message,
@@ -216,7 +231,6 @@ const accessQRAction = async (id: string) => {
     }
     return { type: "Error", message: message, status: response.data.status };
   }
-  revalidatePath("/dashboard/viewqr");
   return {
     type: "QRLinkFound",
     link: response.data.link,
