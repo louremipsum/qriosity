@@ -164,6 +164,7 @@ const QRForm: React.FC<QRFormProps> = ({ form, handleSave, open, role }) => (
         label="Valid Scans"
         min={1}
         placeholder="How many times can this QR be scanned?"
+        disabled={form.values.infiniteScans}
         {...form.getInputProps("scansLeft")}
       />
       <Checkbox
@@ -291,7 +292,9 @@ const UpdateQRForm = (props: QRDetailCardProps) => {
     validate: {
       name: (value: string) =>
         value.length < 1 ? "First name must have at least 1 letters" : null,
-      scansLeft: isInRange({ min: 1 }, "At least 1 scan should be there"),
+      scansLeft: (value: number, values: QRDetail) =>
+        !values.infiniteScans &&
+        isInRange({ min: 1 }, "At least 1 scan should be there")(value),
       link: isNotEmpty("Link is required"),
       expiry: (value, values) =>
         !values.neverExpires &&
