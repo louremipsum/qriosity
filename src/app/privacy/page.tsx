@@ -133,7 +133,7 @@ const Privacy = () => {
             <Title id="Title" order={1} ta={"center"} fz={"3rem"} m={"lg"}>
               Privacy Policy
             </Title>
-            <Text fz={"lg"}>Last updated: February 3, 2024</Text>
+            <Text fz={"lg"}>Last updated: February 21, 2024</Text>
             <Text fz={"lg"}>
               Welcome to Qriosity! This privacy policy outlines how we collect,
               use, and safeguard your information when you use our services.
@@ -219,12 +219,12 @@ const Privacy = () => {
               <List.Item>
                 <b>Website</b> refers to Qriosity, accessible from{" "}
                 <a
-                  href="https://qriosity.vercel.app"
+                  href="https://www.qriosity.xyz/"
                   target="_blank"
                   referrerPolicy="no-referrer"
                   style={{ color: "#00a495" }}
                 >
-                  qriosity.vercel.app
+                  www.qriosity.xyz
                 </a>
               </List.Item>
               <List.Item>
@@ -793,7 +793,20 @@ const Privacy = () => {
             </Title>
             <Text fz={"lg"}>
               If you have any questions about this Privacy Policy, You can
-              contact us:
+              contact us on our{" "}
+              <a
+                href="https://www.qriosity.xyz/support"
+                style={{ color: "#00a495" }}
+              >
+                Support page
+              </a>{" "}
+              or by email{" "}
+              <a
+                href="mailto:support@qriosity.xyz"
+                style={{ color: "#00a495" }}
+              >
+                support@qriosity.xyz
+              </a>
             </Text>
           </Stack>
         </Grid.Col>

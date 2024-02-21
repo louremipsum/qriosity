@@ -175,13 +175,13 @@ const TOS = () => {
               These Terms of Service (<b>“Terms”</b>, <b>“Terms of Service”</b>)
               govern your use of our web pages located at{" "}
               <a
-                href="https://qriosity.vercel.app"
+                href="https://www.qriosity.xyz/"
                 target="_blank"
                 referrerPolicy="no-referrer"
                 style={{ color: "#00a495" }}
               >
-                qriosity.vercel.app
-              </a>{" "}
+                www.qriosity.xyz
+              </a>
               operated by Qriosity.
             </Text>
             <Text fz={"lg"}>
@@ -189,12 +189,12 @@ const TOS = () => {
               explains how we collect, safeguard and disclose information that
               results from your use of our web pages. Please read it here{" "}
               <a
-                href="https://qriosity.vercel.app/privacy"
+                href="https://www.qriosity.xyz/privacy"
                 target="_blank"
                 referrerPolicy="no-referrer"
                 style={{ color: "#00a495" }}
               >
-                qriosity.vercel.app/privacy
+                qriosity.xyz/privacy
               </a>
               .
             </Text>
@@ -206,7 +206,12 @@ const TOS = () => {
             <Text fz={"lg"}>
               If you do not agree with (or cannot comply with) Agreements, then
               you may not use the Service, but please let us know by emailing at{" "}
-              <a href="mailto:email@gmail.com">email</a>
+              <a
+                href="mailto:support@qriosity.xyz"
+                style={{ color: "#00a495" }}
+              >
+                support@qriosity.xyz
+              </a>{" "}
               so we can try to find a solution. These Terms apply to all
               visitors, users and others who wish to access or use Service.
               <br />
@@ -534,9 +539,6 @@ const TOS = () => {
               that you are the copyright owner or authorized to act on the
               copyright owner&apos;s behalf.
             </Text>
-            <Text fz={"lg"}>
-              You can contact our Copyright Agent via email at email.
-            </Text>
             <Title id="error-reporting" order={2}>
               Error Reporting and Feedback
             </Title>
@@ -744,7 +746,20 @@ const TOS = () => {
             </Title>
             <Text fz={"lg"}>
               Please send your feedback, comments, requests for technical
-              support by email: email.
+              support on{" "}
+              <a
+                href="https://www.qriosity.xyz/support"
+                style={{ color: "#00a495" }}
+              >
+                Support page
+              </a>{" "}
+              or by email{" "}
+              <a
+                href="mailto:support@qriosity.xyz"
+                style={{ color: "#00a495" }}
+              >
+                support@qriosity.xyz
+              </a>
             </Text>
           </Stack>
         </Grid.Col>
