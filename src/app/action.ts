@@ -164,6 +164,7 @@ const formDeleteAction = async (id: string) => {
   try {
     const response = await axios.delete(`${process.env.DELETE_QRS}/${id}`, {
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
