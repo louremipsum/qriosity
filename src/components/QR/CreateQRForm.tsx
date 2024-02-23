@@ -17,7 +17,7 @@ import {
   rem,
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
-import { isInRange, isNotEmpty, useForm } from "@mantine/form";
+import { hasLength, isInRange, isNotEmpty, useForm } from "@mantine/form";
 import { useDisclosure, useScrollIntoView } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconCalendar, IconLock } from "@tabler/icons-react";
@@ -51,7 +51,15 @@ const QForm = () => {
 
     validate: {
       name: (value) =>
-        value.length < 1 ? "First name must have at least 1 letters" : null,
+        value.length < 1
+          ? "Name must have at least 1 letters"
+          : value.length > 50
+          ? "Name must have at most 50 letters"
+          : null,
+      desc: hasLength(
+        { max: 100 },
+        "Description must have at most 100 letters"
+      ),
       scansLeft: isInRange({ min: 1 }, "At least 1 scan should be there"),
       link: isNotEmpty("Link is required"),
       expiry: (value, values) =>

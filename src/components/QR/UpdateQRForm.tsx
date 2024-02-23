@@ -18,6 +18,7 @@ import {
   isInRange,
   isNotEmpty,
   UseFormReturnType,
+  hasLength,
 } from "@mantine/form";
 import { IconTrash } from "@tabler/icons-react";
 import { DateTimePicker } from "@mantine/dates";
@@ -290,8 +291,16 @@ const UpdateQRForm = (props: QRDetailCardProps) => {
     },
 
     validate: {
-      name: (value: string) =>
-        value.length < 1 ? "First name must have at least 1 letters" : null,
+      name: (value) =>
+        value.length < 1
+          ? "Name must have at least 1 letters"
+          : value.length > 50
+          ? "Name must have at most 50 letters"
+          : null,
+      desc: hasLength(
+        { max: 100 },
+        "Description must have at most 100 letters"
+      ),
       scansLeft: (value: number, values: QRDetail) =>
         !values.infiniteScans &&
         isInRange({ min: 1 }, "At least 1 scan should be there")(value),
