@@ -18,13 +18,13 @@ export function SubmitButton() {
   const qrCount = qrContext?.numQRs;
   const isHobbyUser = (user?.rolesArray as string[])[0] === "Hobby";
   const isQRCountLimitReached = qrCount! >= 2;
-  const isDataLoaded = qrContext?.dataLoaded; // Get dataLoaded from the context
+  const isDataLoaded = qrContext?.dataLoaded;
 
   return (
     <Group mt="xl">
       <GetQR />
-      {isDataLoaded &&
-        (isHobbyUser && isQRCountLimitReached ? (
+      {isDataLoaded ? (
+        isHobbyUser && isQRCountLimitReached ? (
           <>
             <Stack mt={"md"}>
               <Group>
@@ -42,7 +42,10 @@ export function SubmitButton() {
           <Button type="submit" color="teal" loading={pending}>
             Submit
           </Button>
-        ))}
+        )
+      ) : (
+        <Button color="teal" loading></Button>
+      )}
     </Group>
   );
 }

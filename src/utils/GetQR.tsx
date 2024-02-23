@@ -1,5 +1,5 @@
 "use client";
-import { getQRCount, viewQRAction } from "@/app/action";
+import { getQRCount } from "@/app/action";
 import { QRContext } from "@/context/Context";
 import { useContext, useEffect, useRef } from "react";
 
@@ -19,6 +19,7 @@ const GetQR = () => {
     const fetchData = async () => {
       if (!isLoading.current) {
         isLoading.current = true;
+        setDataLoaded(false);
         const data = await getQRCount();
         if (data && data.num) {
           setNumQRs(data.num);
