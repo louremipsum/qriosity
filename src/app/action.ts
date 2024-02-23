@@ -7,6 +7,7 @@ import { LastEvaluatedKeyType, QRDetail } from "@/types/viewqr";
 import { validate as uuidValidate, version as uuidVersion } from "uuid";
 import { decodeJwt } from "jose";
 import processQRList from "@/utils/processQRList";
+import { revalidateTag } from "next/cache";
 
 function getExpiration(token: string): number {
   const { exp } = decodeJwt(token);
@@ -122,6 +123,7 @@ const formAction = async (formValues: FormValues) => {
       link: res.data.link,
       message: res.data.message,
     };
+    revalidateTag("getCount");
     return respAction;
   } catch (error) {
     const respAction: ActionResponse = {
@@ -175,6 +177,7 @@ const formDeleteAction = async (id: string) => {
           "There was an error while deleting the QR Code. Please try again later",
       };
     }
+    revalidateTag("getCount");
     return {
       action: "QRCodeDeleted",
       message: response.data.message,
@@ -331,8 +334,7 @@ const getQRCount = async () => {
     // Create the query parameters
     const params = new URLSearchParams({ user_id: currentUser });
     const resp = await fetch(`${process.env.COUNT}?${params.toString()}`, {
-      headers: {},
-      next: { revalidate: 3600 },
+      next: { tags: ["getCount"] },
     });
     if (!resp.ok) {
       throw new Error(`HTTP error! status: ${resp.status}\n ${resp}`);
