@@ -206,6 +206,13 @@ const ViewQR = ({ qrList, lastEvaluatedKey }: Props) => {
             <Text size={"sm"} ta={"center"} c={"dimmed"}>
               Start by creating one!
             </Text>
+            <Text>
+              If you feel like even though you have QRs and they are not
+              displaced here, contact{" "}
+              <Link href={"/support"} color="teal">
+                support
+              </Link>
+            </Text>
           </Stack>
         ) : (
           <SimpleGrid
