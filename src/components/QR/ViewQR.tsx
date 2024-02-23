@@ -208,8 +208,8 @@ const ViewQR = ({ qrList, lastEvaluatedKey }: Props) => {
             </Text>
             <Text>
               If you feel like even though you have QRs and they are not
-              displaced here, contact{" "}
-              <Link href={"/support"} color="teal">
+              displayed here, contact{" "}
+              <Link href={"/support"} style={{ color: "teal" }}>
                 support
               </Link>
             </Text>
