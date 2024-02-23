@@ -21,7 +21,8 @@ const GetQR = () => {
         isLoading.current = true;
         setDataLoaded(false);
         const data = await getQRCount();
-        if (data && data.num) {
+
+        if (data) {
           setNumQRs(data.num);
           setDataLoaded(true);
         }
@@ -30,7 +31,7 @@ const GetQR = () => {
     };
 
     fetchData();
-  }, [setNumQRs, setDataLoaded]); // Include setDataLoaded in the dependencies array
+  }, [setNumQRs, setDataLoaded]);
 
   return <></>;
 };
