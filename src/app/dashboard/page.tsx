@@ -7,6 +7,7 @@ import {
   Text,
 } from "@mantine/core";
 import classes from "@styles/Dashboard.module.css";
+import Link from "next/link";
 
 const Dashboard = () => {
   return (
@@ -36,9 +37,11 @@ const Dashboard = () => {
             </Text>
             <Text fw={400}>Missed the Tour or new to Qriosity?</Text>
             <Flex justify="flex-end">
-              <Button variant="filled" color="teal" radius={"md"}>
-                Take the Tour
-              </Button>
+              <Link href={""}>
+                <Button variant="filled" color="teal" radius={"md"}>
+                  Take the Tour
+                </Button>
+              </Link>
             </Flex>
           </Stack>
         </BackgroundImage>
@@ -48,9 +51,11 @@ const Dashboard = () => {
           </Text>
           <Text fw={400}>Start by creating a new QR</Text>
           <Flex justify="flex-end">
-            <Button variant="light" color="teal">
-              Create QR
-            </Button>
+            <Link href={"/dashboard/createqr"}>
+              <Button variant="light" color="teal">
+                Create QR
+              </Button>
+            </Link>
           </Flex>
         </Stack>
       </SimpleGrid>
