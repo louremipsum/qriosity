@@ -241,6 +241,46 @@ const accessQRAction = async (id: string) => {
   };
 };
 
+const currentUserRole = async (userID: string) => {
+  const token = await createAccessToken(true);
+  const url = `${
+    process.env.AUTH0_ISSUER_BASE_URL
+  }/api/v2/users/${encodeURIComponent(userID)}/roles`;
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+  // try {
+  // Get the user's current roles
+  // const currentRolesResponse = await fetch(
+  //   `${process.env.AUTH0_ISSUER_BASE_URL}/api/v2/users/${encodeURIComponent(
+  //     userID
+  //   )}/roles`,
+  //   {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   }
+  // );
+  // if (!currentRolesResponse.ok) {
+  //   console.log("currentRolesResponse: ", currentRolesResponse);
+  // }
+  try {
+    // Get the user's current roles
+    const currentRolesResponse = await axios.get(url, { headers });
+    const currentRoles = currentRolesResponse.data;
+    // const currentRoles = await currentRolesResponse.json();
+    // Extract the role IDs from the current roles
+    const currentRoleIds = currentRoles.map((role: { id: string }) => role.id);
+    return currentRoleIds;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
 /**
  * Changes the role of a user in Auth0. The user's current roles are removed and the new role is added.
  * Used for Stripe webhook events to update user roles based on their subscription status
@@ -266,12 +306,7 @@ const changeUserRole = async (userID: string, role: string) => {
 
   try {
     // Get the user's current roles
-    const currentRolesResponse = await axios.get(url, { headers });
-    const currentRoles = currentRolesResponse.data;
-
-    // Extract the role IDs from the current roles
-    const currentRoleIds = currentRoles.map((role: { id: string }) => role.id);
-
+    const currentRoleIds = await currentUserRole(userID);
     // Remove all current roles
     await axios.delete(url, { headers, data: { roles: currentRoleIds } });
     const response = await axios.post(url, data, { headers });
@@ -360,4 +395,5 @@ export {
   changeUserRole,
   viewQRAction,
   getQRCount,
+  currentUserRole,
 };
