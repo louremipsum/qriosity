@@ -7,10 +7,11 @@ export const QRProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [numQRs, setNumQRs] = React.useState(0);
   const [dataLoaded, setDataLoaded] = React.useState(false);
+  const [role, setRole] = React.useState("");
 
   return (
     <QRContext.Provider
-      value={{ numQRs, setNumQRs, dataLoaded, setDataLoaded }}
+      value={{ numQRs, setNumQRs, dataLoaded, setDataLoaded, role, setRole }}
     >
       {children}
     </QRContext.Provider>
