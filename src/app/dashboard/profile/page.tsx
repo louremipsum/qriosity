@@ -11,8 +11,12 @@ import {
 import { IconAt } from "@tabler/icons-react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
+import { useContext } from "react";
+import { QRContext, QRContextType } from "@/context/Context";
 
 const Profile = () => {
+  const context = useContext(QRContext);
+  const { role } = context as QRContextType;
   const { user } = useUser();
   return (
     <>
@@ -63,6 +67,7 @@ const Profile = () => {
 
         <Badge color="teal" variant="light">
           {(user?.rolesArray as string[]) && (user?.rolesArray as string[])}
+          {role}
         </Badge>
       </Group>
       <Link href={process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_TEST!}>

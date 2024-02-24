@@ -1,3 +1,4 @@
+"use client";
 import {
   BackgroundImage,
   Button,
@@ -8,8 +9,25 @@ import {
 } from "@mantine/core";
 import classes from "@styles/Dashboard.module.css";
 import Link from "next/link";
+import { useEffect, useContext } from "react";
+import { currentUserRole } from "../action";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { QRContext } from "@/context/Context";
+import { QRContextType } from "@/context/Context";
 
 const Dashboard = () => {
+  const context = useContext(QRContext);
+  const { setRole } = context as QRContextType;
+  const { user } = useUser();
+  useEffect(() => {
+    const settingRole = async () => {
+      const role = await currentUserRole(user?.sub!);
+      setRole(role);
+    };
+    if (user) {
+      settingRole();
+    }
+  }, [user, setRole]);
   return (
     <Stack>
       <Text
