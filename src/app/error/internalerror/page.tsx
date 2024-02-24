@@ -13,7 +13,7 @@ const InternalServerError = () => {
         Internal Server Error
       </Text>
       <Image
-        src={"/notFound.svg"}
+        src={"/NotFound.svg"}
         h={"20%"}
         w={"20%"}
         alt="mailbox"
