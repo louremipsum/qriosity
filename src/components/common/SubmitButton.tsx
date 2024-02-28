@@ -1,5 +1,6 @@
 "use client";
-import { QRContext } from "@/context/Context";
+import { getQRCount } from "@/app/action";
+import { QRContext, QRContextType } from "@/context/Context";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { Button, Group, Stack, Text } from "@mantine/core";
 import {
@@ -7,22 +8,41 @@ import {
   IconInfoCircleFilled,
   IconSend,
 } from "@tabler/icons-react";
-import GetQR from "@utils/GetQR";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useFormStatus } from "react-dom";
 
 export function SubmitButton() {
   const { pending } = useFormStatus();
   const { user } = useUser();
-  const qrContext = useContext(QRContext);
-  const qrCount = qrContext?.numQRs;
+  const context = useContext(QRContext);
+  const { setNumQRs, setDataLoaded } = context as QRContextType;
+  const qrCount = context?.numQRs;
   const isHobbyUser = (user?.rolesArray as string[])[0] === "Hobby";
   const isQRCountLimitReached = qrCount! >= 2;
-  const isDataLoaded = qrContext?.dataLoaded;
+  const isDataLoaded = context?.dataLoaded;
+
+  const isLoading = useRef(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!isLoading.current) {
+        isLoading.current = true;
+        setDataLoaded(false);
+        const data = await getQRCount();
+
+        if (data) {
+          setNumQRs(data.num);
+          setDataLoaded(true);
+        }
+        isLoading.current = false;
+      }
+    };
+
+    fetchData();
+  }, [setNumQRs, setDataLoaded]);
 
   return (
     <Group mt="xl">
-      <GetQR />
       {isDataLoaded ? (
         isHobbyUser && isQRCountLimitReached ? (
           <>
