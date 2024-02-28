@@ -49,12 +49,12 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Qriosity",
-    description: "Make temporary QR codes",
+    description: "Make dynamic temporary QR codes",
     siteId: "1467726470533754880",
     creator: "@louremipsum",
     creatorId: "1467726470533754880",
     images: [
-      "https://github.com/louremipsum/qriosity/blob/main/public/Group_2.png?raw=true",
+      "https://github.com/louremipsum/qriosity/blob/main/public/ogImage.png?raw=true",
     ],
   },
   bookmarks: ["https://www.qriosity.xyz/"],
