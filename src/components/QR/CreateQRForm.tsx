@@ -71,7 +71,10 @@ const QForm = () => {
 
   const handleSubmit = async () => {
     if (form.validate().hasErrors) return;
-    const response = await formAction(form.values);
+    const response = await formAction(
+      form.values,
+      (user?.rolesArray as string[])[0]
+    );
     if (response.action === "URLNotSafe") {
       open();
       setMatch(response.matches!);
