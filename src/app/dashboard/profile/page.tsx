@@ -65,7 +65,12 @@ const Profile = () => {
           {(user?.rolesArray as string[]) && (user?.rolesArray as string[])}
         </Badge>
       </Group>
-      <Link href={process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_TEST!}>
+      <Link
+        href={`${process.env
+          .NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_TEST!}?prefilled_email=${encodeURIComponent(
+          user?.email!
+        )}`}
+      >
         <Button color="teal" variant="filled" mt={"lg"}>
           Manage subscription
         </Button>
