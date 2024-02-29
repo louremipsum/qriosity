@@ -111,7 +111,7 @@ const checkURL = async (url: string): Promise<CheckURLResponse> => {
   }
 };
 
-const formAction = async (formValues: FormValues) => {
+const formAction = async (formValues: FormValues, role: string) => {
   const session = await getSession();
   const currentUser = session?.user.sub;
   const formWithUser = { ...formValues, user: currentUser };
@@ -132,7 +132,10 @@ const formAction = async (formValues: FormValues) => {
     return respAction;
   }
   const qrCount = await getQRCount();
-  if (qrCount.num && qrCount.num >= 2) {
+  const hasValidQRCount = qrCount.num && qrCount.num >= 2;
+  const isHobbyRole = role === "Hobby";
+
+  if (hasValidQRCount && isHobbyRole) {
     const respAction: ActionResponse = {
       action: "QRCreationFailed",
       message: "You can only create up to 2 QR codes",
@@ -326,20 +329,23 @@ const viewQRAction = async (exclusiveStartKey: null | LastEvaluatedKeyType) => {
     if (exclusiveStartKey) {
       params.append("exclusiveStartKey", JSON.stringify(exclusiveStartKey));
     }
-    const resp = await axios.get(
+    const response = await fetch(
       `${process.env.VIEW_QRS}?${params.toString()}`,
       {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        next: { tags: ["getQR"] },
       }
     );
-    if (resp.status !== 200) {
-      throw new Error(`HTTP error! status: ${resp.status}\n`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = resp.data;
+    const data = await response.json();
     if (!data) {
       return {
         notFound: true,
