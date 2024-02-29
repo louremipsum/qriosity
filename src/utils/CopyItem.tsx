@@ -32,7 +32,7 @@ const CopyItem = (props: CopyItemProps) => {
   return (
     <div className={classes.copyDiv}>
       <Text c={"gray"} mr={"xs"}>
-        {props.item.slice(8)}
+        {props.item}
       </Text>
       <Btn item={props.item} />
     </div>
