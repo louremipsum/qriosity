@@ -28,6 +28,7 @@ import dayjs from "dayjs";
 import { QRCode } from "qrcode";
 import { useState } from "react";
 import QRCodeComponent from "./QRCodeGen";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 function StyledStepper(props: StepperProps) {
   return (
@@ -60,6 +61,7 @@ function GuideForm() {
   const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>();
   const [QR, setQR] = useState<QRCode | null>();
   const [transitionOpen, setTransitionOpen] = useState(true);
+  const { user } = useUser();
   const form = useForm<FormValues>({
     name: "qr-form",
     initialValues: {
@@ -133,7 +135,10 @@ function GuideForm() {
 
   const handleSubmit = async () => {
     if (form.validate().hasErrors) return;
-    const response = await formAction(form.values);
+    const response = await formAction(
+      form.values,
+      (user?.rolesArray as string[])[0]
+    );
     if (response.action === "URLNotSafe") {
       open();
       setMatch(response.matches!);
