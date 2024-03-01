@@ -23,6 +23,12 @@ const onError: AppRouterOnError = (req: NextRequest, error: HandlerError) => {
       ?.startsWith("Verify your email")
   )
     redirect(`/error/notverify${req.nextUrl.search}`);
+  if (
+    req.nextUrl.searchParams
+      .get("error_description")
+      ?.startsWith("The user with this email already exists")
+  )
+    redirect(`/error/email_exists${req.nextUrl.search}`);
   redirect(`/error/internalerror${req.nextUrl.search}`);
 };
 
