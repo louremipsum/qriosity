@@ -1,32 +1,32 @@
 "use client";
+import { FooterLinks } from "@/components/common/Footer";
 import Header from "@/components/common/Header";
-import axios from "axios";
-import { loadStripe } from "@stripe/stripe-js";
+import { UserProfile, useUser } from "@auth0/nextjs-auth0/client";
 import {
+  BackgroundImage,
+  Button,
   Card,
   Container,
+  Image,
+  List,
+  SegmentedControl,
+  SimpleGrid,
   Stack,
   Text,
-  Image,
-  Button,
-  SimpleGrid,
-  SegmentedControl,
-  List,
   ThemeIcon,
   rem,
-  BackgroundImage,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useState } from "react";
+import { loadStripe } from "@stripe/stripe-js";
 import {
-  IconCircleCheck,
   IconCircleArrowUpRightFilled,
+  IconCircleCheck,
   IconCreditCardPay,
   IconPhone,
 } from "@tabler/icons-react";
-import { UserProfile, useUser } from "@auth0/nextjs-auth0/client";
+import axios from "axios";
 import { useRouter } from "next/navigation";
-import { FooterLinks } from "@/components/common/Footer";
+import { useState } from "react";
 
 interface PricePlan {
   title: string;
@@ -114,22 +114,22 @@ const dynamicLink = (
   router: any
 ) => {
   return async () => {
-    if (item.title === "Hobby") {
-      if (user) router.push("/dashboard/createqr");
-      else
-        router.push(
-          `/api/auth/login?returnTo=${encodeURIComponent(
-            "/dashboard/createqr"
-          )}`
-        );
-      return;
-    }
-    if (item.title === "Business") {
-      router.push("/support");
-      return;
-    }
+    const redirectTo = (path: string) => router.push(path);
+    const redirectToLogin = (returnTo: string) =>
+      router.push(`/api/auth/login?returnTo=${encodeURIComponent(returnTo)}`);
+
     if (!user) {
-      router.push(`/api/auth/login?returnTo=${encodeURIComponent("/pricing")}`);
+      redirectToLogin("/pricing");
+      return;
+    }
+
+    if (item.title === "Hobby") {
+      redirectTo("/dashboard/createqr");
+      return;
+    }
+
+    if (item.title === "Business") {
+      redirectTo("/support");
       return;
     }
 
