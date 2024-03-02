@@ -89,7 +89,7 @@ const QRCard = ({ item, setSelected, open }: QRCardProps) => {
         </Badge>
 
         <Flex direction="column" mt={"md"}>
-          <Group m={0}>
+          <Group m={0} h={44}>
             <Text fw={500}>Expiry:</Text>
             {item.neverExpires ? (
               <span style={{ fontSize: "28px" }} aria-description="Infinite">
@@ -99,14 +99,15 @@ const QRCard = ({ item, setSelected, open }: QRCardProps) => {
               item.expiry.toDateString()
             )}
           </Group>
-          <Group m={0}>
+          <Group m={0} h={44}>
             <Text fw={500}>Scans Left:</Text>
+
             {item.infiniteScans ? (
               <span style={{ fontSize: "28px" }} aria-description="Infinite">
                 ∞
               </span>
             ) : (
-              item.scansLeft
+              <span>{item.scansLeft}</span>
             )}
           </Group>
         </Flex>
@@ -128,7 +129,7 @@ const ViewQR = ({ qrList, lastEvaluatedKey }: Props) => {
     useState<LastEvaluatedKeyType>(lastEvaluatedKey);
   const [moreQRs, setMoreQRs] = useState(false);
   const [loading, setLoading] = useState(false);
-  const matchBigScreen = useMediaQuery("(min-width: 130em)");
+  const matchBigScreen = useMediaQuery("(min-width: 90em)");
 
   useEffect(() => {
     if (lastEvaluatedKey) setMoreQRs(true);
@@ -157,7 +158,7 @@ const ViewQR = ({ qrList, lastEvaluatedKey }: Props) => {
           title="Details"
           scrollAreaComponent={ScrollArea.Autosize}
           position="right"
-          size="50%"
+          size="60%"
         >
           {selected && <QRDetailCard {...selected} closeModal={close} />}
         </Drawer>
