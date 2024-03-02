@@ -49,8 +49,8 @@ const price: PricePlan[] = [
     img: "/Hobby.svg",
     alt: "Hobby plan illustration",
     use: "Ideal for individuals and quick testing",
-    monthlyPrice: "$0",
-    annualPrice: "$0",
+    monthlyPrice: "₹0",
+    annualPrice: "₹0",
     features: [
       "2 temporary QR codes",
       "Unlimited Updates to QR codes",
@@ -72,8 +72,8 @@ const price: PricePlan[] = [
     img: "/Pro.svg",
     alt: "Pro plan illustration",
     use: "Empower small businesses with versatility",
-    monthlyPrice: "$6",
-    annualPrice: "$5",
+    monthlyPrice: "₹199",
+    annualPrice: "₹1999",
     features: [
       "1000 Temporary QR codes",
       "Unlimited Updates to QR codes",
