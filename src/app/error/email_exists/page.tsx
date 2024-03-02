@@ -30,13 +30,16 @@ const EmailAlreadyExists = () => {
       <Text fz={"32"} fw={500}>
         {errDesc?.split(",")[0]}
       </Text>
-      <Image src={"/mailbox.svg"} h={"20%"} w={"20%"} alt="mailbox" mt={"md"} />
+      <Image src={"/dreamer.svg"} h={"20%"} w={"20%"} alt="mailbox" mt={"md"} />
       <Container size={"md"}>
         <Text c={"dimmed"} mt={"md"} ta={"center"}>
           There is already an account associated with this email. Please{" "}
-          <Link href={"/auth/signup"}>signup</Link> with a different email. Try
-          logging in with the identity provider(Google or native account
-          creation) you used to sign up.
+          <Link href={"/auth/signup"} style={{ color: "#00a495" }}>
+            signup
+          </Link>{" "}
+          with a different email.
+          <br /> Try logging in with the identity provider(Google or native
+          account creation) you used to sign up.
         </Text>
       </Container>
       <Group justify="space-between" w={"25%"} mt={"xl"} mb={"xl"}>
