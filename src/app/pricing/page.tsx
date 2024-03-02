@@ -72,8 +72,8 @@ const price: PricePlan[] = [
     img: "/Pro.svg",
     alt: "Pro plan illustration",
     use: "Empower small businesses with versatility",
-    monthlyPrice: "$6.99",
-    annualPrice: "$4.99",
+    monthlyPrice: "$6",
+    annualPrice: "$5",
     features: [
       "1000 Temporary QR codes",
       "Unlimited Updates to QR codes",

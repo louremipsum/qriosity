@@ -64,6 +64,7 @@ export async function POST(request: Request) {
         {
           price: process.env[priceId],
           quantity: 1,
+          tax_rates: ["txr_1OclJCSAUX9bbM3jPaltmlgC"],
         },
       ],
       mode: "subscription",
@@ -89,6 +90,7 @@ export async function POST(request: Request) {
 
     return Response.json({ sessionId: session.id });
   } catch (err) {
+    console.error(err);
     const { statusCode, message } = err as StripeError;
     return new Response(message, { status: statusCode || 500 });
   }
