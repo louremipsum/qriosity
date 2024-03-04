@@ -24,7 +24,7 @@ import {
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconAdjustments, IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import LoadMoreButton from "./LoadMoreButton";
 
 export const dynamic = "force-dynamic";
@@ -127,13 +127,9 @@ const ViewQR = ({ qrList, lastEvaluatedKey }: Props) => {
   const [QRList, setQRList] = useState<extendedQRList[]>(qrList);
   const [lastEvalKey, setLastEvalKey] =
     useState<LastEvaluatedKeyType>(lastEvaluatedKey);
-  const [moreQRs, setMoreQRs] = useState(false);
+  const [moreQRs, setMoreQRs] = useState(() => !!lastEvaluatedKey);
   const [loading, setLoading] = useState(false);
   const matchBigScreen = useMediaQuery("(min-width: 90em)");
-
-  useEffect(() => {
-    if (lastEvaluatedKey) setMoreQRs(true);
-  }, [lastEvaluatedKey, qrList]);
 
   const getData = async () => {
     setLoading(true);
