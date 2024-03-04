@@ -64,7 +64,7 @@ export async function POST(request: Request) {
         {
           price: process.env[priceId],
           quantity: 1,
-          tax_rates: ["txr_1OclJCSAUX9bbM3jPaltmlgC"],
+          tax_rates: ["txr_1OqR9nSAUX9bbM3jozq91eG9"],
         },
       ],
       mode: "subscription",
