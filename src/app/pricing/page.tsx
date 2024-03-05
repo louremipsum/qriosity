@@ -80,31 +80,31 @@ const price: PricePlan[] = [
       "Expiry and scheduling of QR codes",
       "Analytics",
     ],
-    btnText: "Buy Now",
+    btnText: "Coming soon",
     hrefMonthly: "STRIPE_PRICE_PRO_MON",
     hrefYearly: "STRIPE_PRICE_PRO_YEAR",
     btnIcon: <IconCreditCardPay style={{ width: rem(16), height: rem(16) }} />,
-    disabled: false,
+    disabled: true,
   },
-  {
-    title: "Business",
-    img: "/Business.svg",
-    alt: "Business plan illustration",
-    use: "Unleash the ultimate QR experience for growth",
-    // monthlyPrice: "$15.99",
-    // annualPrice: "$14.99",
-    // features: [
-    //   "All features of Starter, plus",
-    //   "1000 QR codes with unlimited updates",
-    //   "Priority access to latest features",
-    //   "Dedicated support and onboarding",
-    // ],
-    btnText: "Contact Us",
-    hrefMonthly: "/support",
-    hrefYearly: "/support",
-    btnIcon: <IconPhone style={{ width: rem(16), height: rem(16) }} />,
-    disabled: false,
-  },
+  // {
+  //   title: "Business",
+  //   img: "/Business.svg",
+  //   alt: "Business plan illustration",
+  //   use: "Unleash the ultimate QR experience for growth",
+  //   // monthlyPrice: "$15.99",
+  //   // annualPrice: "$14.99",
+  //   // features: [
+  //   //   "All features of Starter, plus",
+  //   //   "1000 QR codes with unlimited updates",
+  //   //   "Priority access to latest features",
+  //   //   "Dedicated support and onboarding",
+  //   // ],
+  //   btnText: "Contact Us",
+  //   hrefMonthly: "/support",
+  //   hrefYearly: "/support",
+  //   btnIcon: <IconPhone style={{ width: rem(16), height: rem(16) }} />,
+  //   disabled: false,
+  // },
 ];
 
 const dynamicLink = (
@@ -184,7 +184,7 @@ const Pricing = () => {
             value={pricingPlan}
             onChange={setPricingPlan}
           />
-          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} mb={40}>
+          <SimpleGrid cols={{ base: 1, sm: 2, lg: 2 }} mb={40}>
             {price.map((item, index) => (
               <Card
                 key={index}
@@ -194,6 +194,7 @@ const Pricing = () => {
                 withBorder
                 mb={"lg"}
                 w={"20rem"}
+                ml={"2rem"}
               >
                 <Card.Section>
                   <div style={{ backgroundColor: "white" }}>
