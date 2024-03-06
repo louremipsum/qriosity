@@ -7,10 +7,10 @@ import "./globals.css";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import NextTopLoader from "nextjs-toploader";
 import { theme } from "@/utils/theme";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { QRProvider } from "@/context/Provider";
+import ProgressProvider from "@/components/common/ProgressBarProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -76,9 +76,10 @@ export default function RootLayout({
       <UserProvider>
         <body className={inter.className}>
           <MantineProvider theme={theme}>
-            <NextTopLoader color={theme.colors?.teal![5]} showSpinner={false} />
-            <Notifications />
-            <QRProvider>{children}</QRProvider>
+            <ProgressProvider>
+              <Notifications />
+              <QRProvider>{children}</QRProvider>
+            </ProgressProvider>
           </MantineProvider>
           <SpeedInsights />
         </body>

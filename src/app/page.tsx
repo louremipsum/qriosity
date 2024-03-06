@@ -216,7 +216,7 @@ const Index = () => {
             </Stack>
           </div>
         </Container>
-        <Demo />
+        {/* <Demo /> */}
         <Stack>
           <Text
             fw={700}
