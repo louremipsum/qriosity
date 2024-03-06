@@ -33,15 +33,22 @@ const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
       const modulesSize = qrcodeObject!.modules.size;
+      const quietZone = 10; // size of quiet zone
+      const qrSize = size - 2 * quietZone; // size of QR code, excluding quiet zone
+
+      // Clear the canvas and fill with white color for quiet zone
+      ctx.clearRect(0, 0, size, size);
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, size, size);
+
       for (let i = 0; i < modulesSize; i++) {
         for (let j = 0; j < modulesSize; j++) {
-          // ctx.fillStyle = qrcodeObject!.modules.get(i, j) ? "#000" : "#fff";
           ctx.fillStyle = helper(qrcodeObject!.modules, i, j) ? "#000" : "#fff";
           ctx.fillRect(
-            (j * size) / modulesSize,
-            (i * size) / modulesSize,
-            size / modulesSize,
-            size / modulesSize
+            quietZone + (j * qrSize) / modulesSize,
+            quietZone + (i * qrSize) / modulesSize,
+            qrSize / modulesSize,
+            qrSize / modulesSize
           );
         }
       }
