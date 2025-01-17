@@ -29,12 +29,12 @@ export async function GET(request: NextRequest) {
       return new Response("Unauthorized", { status: 403 });
     }
 
-    const session = await getSession();
+    // const session = await getSession();
 
-    // Check if the user is authenticated
-    if (!session) {
-      return new Response("Unauthorized", { status: 403 });
-    }
+    // // Check if the user is authenticated
+    // if (!session) {
+    //   return new Response("Unauthorized", { status: 403 });
+    // }
 
     const { searchParams } = new URL(request.url);
     const manageAPI = searchParams.get("manageAPI");
