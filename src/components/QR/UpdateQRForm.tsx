@@ -239,6 +239,7 @@ const QRForm: React.FC<QRFormProps> = ({ form, handleSave, open, role }) => (
       <TextInput
         withAsterisk
         label="Link"
+        type="url"
         placeholder="What link should be converted to QR Code?"
         {...form.getInputProps("link")}
       />

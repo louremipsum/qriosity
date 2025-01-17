@@ -238,6 +238,7 @@ const QForm = () => {
             withAsterisk
             label="Link"
             mt={"lg"}
+            type="url"
             placeholder="What link should be converted to QR Code?"
             {...form.getInputProps("link")}
           />

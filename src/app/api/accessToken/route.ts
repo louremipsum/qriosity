@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { getAuth0M2MTokenWithCache } from "./token";
+import { getSession } from "@auth0/nextjs-auth0";
 
 // export const runtime = "edge";
 
@@ -25,6 +26,13 @@ export async function GET(request: NextRequest) {
 
     const secretKey = request.headers.get("x-secret-key");
     if (secretKey !== process.env.INTERNAL_SECRET_KEY) {
+      return new Response("Unauthorized", { status: 403 });
+    }
+
+    const session = await getSession();
+
+    // Check if the user is authenticated
+    if (!session) {
       return new Response("Unauthorized", { status: 403 });
     }
 
